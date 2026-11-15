@@ -1,0 +1,29 @@
+---
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+// Alle foto's lopen via deze component: AVIF + WebP, breedtes niet groter dan de bron.
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  widths: number[];
+  sizes: string;
+  boven?: boolean; // boven de vouw: meteen laden
+  class?: string;
+}
+const { src, alt, widths, sizes, boven = false, class: klasse } = Astro.props;
+const breedtes = [...new Set(widths.map((w) => Math.min(w, src.width)))];
+---
+
+<Picture
+  src={src}
+  alt={alt}
+  widths={breedtes}
+  sizes={sizes}
+  formats={["avif", "webp"]}
+  fallbackFormat="webp"
+  quality={62}
+  loading={boven ? "eager" : "lazy"}
+  fetchpriority={boven ? "high" : "auto"}
+  class={klasse}
+/>

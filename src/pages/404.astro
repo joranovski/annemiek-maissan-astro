@@ -1,0 +1,31 @@
+---
+import Basis from "../layouts/Basis.astro";
+import { menu } from "../lib/content";
+const items = await menu();
+---
+
+<Basis titel="Pagina niet gevonden" noindex>
+  <section class="sectie">
+    <div class="container container--smal nietgevonden">
+      <h1>Deze pagina bestaat niet (meer)</h1>
+      <p>Misschien vind je wat je zoekt op een van deze pagina's:</p>
+      <p class="nietgevonden__links">
+        <a class="knop" href="/">Home</a>
+        {items.map((i) => <a class="knop" href={i.url}>{i.titel}</a>)}
+      </p>
+    </div>
+  </section>
+</Basis>
+
+<style>
+  .nietgevonden {
+    text-align: center;
+    padding-block: var(--r-12);
+  }
+  .nietgevonden__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--r-3);
+  }
+</style>

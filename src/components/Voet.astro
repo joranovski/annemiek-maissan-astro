@@ -1,0 +1,93 @@
+---
+import site from "../data/site.json";
+import Icon from "./Icon.astro";
+import { menu } from "../lib/content";
+
+const items = await menu();
+const iconen: Record<string, "linkedin" | "youtube" | "facebook" | "instagram"> = {
+  LinkedIn: "linkedin",
+  YouTube: "youtube",
+  Facebook: "facebook",
+  Instagram: "instagram",
+};
+---
+
+<footer class="voet">
+  <div class="container voet__raster">
+    <div>
+      <p class="voet__naam">{site.naam}</p>
+      <p><a class="voet__link" href={`mailto:${site.email}`}><Icon naam="mail" />{site.email}</a></p>
+    </div>
+    <nav aria-label="Pagina's">
+      <h2 class="voet__kop">Aanbod</h2>
+      <ul>
+        {items.map((i) => <li><a class="voet__link" href={i.url}>{i.titel}</a></li>)}
+      </ul>
+    </nav>
+    <div>
+      <h2 class="voet__kop">Volg Annemiek</h2>
+      <ul>
+        {
+          site.links.map((l) => (
+            <li>
+              <a class="voet__link" href={l.url} rel="noopener">
+                {iconen[l.label] && <Icon naam={iconen[l.label]} />}
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+  <div class="container voet__onder">© {new Date().getFullYear()} {site.naam}</div>
+</footer>
+
+<style>
+  .voet {
+    background: var(--voet-bg);
+    color: var(--tekst);
+    padding: var(--r-12) 0 calc(var(--r-6) + env(safe-area-inset-bottom));
+    margin-top: var(--r-12);
+  }
+  .voet__raster {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--r-8);
+  }
+  .voet__naam {
+    font-family: var(--font-kop);
+    font-size: var(--kop-sm);
+    line-height: 1.2;
+  }
+  .voet__kop {
+    font-family: var(--font-tekst);
+    font-size: var(--tekst-md);
+    font-weight: 600;
+    margin-bottom: var(--r-2);
+  }
+  .voet ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .voet__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--r-2);
+    min-height: 44px;
+    text-decoration: none;
+    color: var(--tekst-zacht);
+  }
+  .voet__link:hover {
+    color: var(--wit);
+    text-decoration: underline;
+  }
+  .voet__onder {
+    margin-top: var(--r-8);
+    padding-top: var(--r-4);
+    border-top: 1px solid hsl(186 40% 40%);
+    font-size: var(--tekst-sm);
+    color: var(--tekst-zacht);
+  }
+</style>

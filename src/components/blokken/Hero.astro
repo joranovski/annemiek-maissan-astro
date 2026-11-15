@@ -1,0 +1,117 @@
+---
+import Foto from "../Foto.astro";
+import { md, type Blok } from "../../lib/content";
+
+interface Props {
+  blok: Extract<Blok, { type: "hero" }>;
+  eerste: boolean;
+}
+const { blok, eerste } = Astro.props;
+const heeftTekst = Boolean(blok.titel || blok.tekst);
+const Kop = eerste ? "h1" : "h2";
+// Welk deel van de foto zichtbaar blijft als hij wordt bijgesneden
+const focus = { boven: "50% 20%", midden: "50% 38%", onder: "50% 65%" }[blok.fotoFocus];
+---
+
+<section style={`--focus: ${focus}`} class:list={["hero", `hero--${blok.uitlijning}`, { "hero--groot": heeftTekst, "hero--zonder-foto": !blok.foto }]}>
+  {
+    blok.foto && (
+      <Foto src={blok.foto} alt={blok.fotoAlt ?? ""} widths={[640, 1280, 1920]} sizes={heeftTekst ? "(min-width: 60rem) 55vw, 100vw" : "100vw"} boven={eerste} class="hero__foto" />
+    )
+  }
+  {
+    heeftTekst && (
+      <div class="container hero__inhoud">
+        {blok.titel && <Kop class="hero__titel" set:html={md(blok.titel, true)} />}
+        {blok.tekst && <div class="hero__tekst tekst" set:html={md(blok.tekst)} />}
+      </div>
+    )
+  }
+</section>
+
+<style>
+  /* Zonder tekst: een fotobanner. Met tekst: foto en tekst naast elkaar (desktop) of onder elkaar
+     (telefoon), zodat de tekst nooit over het gezicht op de foto valt. */
+  .hero {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero :global(img.hero__foto) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focus);
+  }
+  .hero:not(.hero--groot) {
+    height: clamp(14rem, 45svh, 28rem);
+  }
+  .hero:not(.hero--groot) :global(.hero__foto),
+  .hero:not(.hero--groot) :global(img.hero__foto) {
+    position: absolute;
+    inset: 0;
+  }
+  .hero--zonder-foto {
+    height: auto !important;
+  }
+
+  .hero--groot {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: var(--paneel-vast);
+  }
+  .hero--groot :global(.hero__foto) {
+    display: block;
+    aspect-ratio: 4 / 3;
+  }
+  .hero__inhoud {
+    padding-block: var(--r-8) var(--r-12);
+  }
+  .hero__titel {
+    font-size: var(--kop-lg);
+    margin-bottom: var(--r-4);
+  }
+  .hero__tekst {
+    font-size: var(--tekst-lg);
+    line-height: 1.6;
+    color: var(--tekst-zacht);
+  }
+  .hero--midden .hero__titel {
+    text-align: center;
+  }
+
+  @media (min-width: 60rem) {
+    .hero--groot {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      min-height: min(calc(100svh - var(--kop-hoogte)), 46rem);
+    }
+    .hero--groot :global(.hero__foto) {
+      grid-column: 2;
+      grid-row: 1;
+      aspect-ratio: auto;
+      height: 100%;
+    }
+    .hero--groot.hero--rechts :global(.hero__foto) {
+      grid-column: 1;
+    }
+    .hero--groot .hero__inhoud {
+      grid-row: 1;
+      align-self: center;
+      width: auto;
+      max-width: 34rem;
+      margin: 0 var(--r-12) 0 max(var(--r-6), (100vw - var(--breed)) / 2);
+      padding-block: var(--r-16);
+    }
+    .hero--groot.hero--midden .hero__titel {
+      text-align: left;
+    }
+    .hero--groot.hero--rechts .hero__inhoud {
+      grid-column: 2;
+      margin: 0 max(var(--r-6), (100vw - var(--breed)) / 2) 0 var(--r-12);
+    }
+  }
+  @media (max-width: 40rem) {
+    .hero__tekst {
+      font-size: var(--tekst-md);
+    }
+  }
+</style>

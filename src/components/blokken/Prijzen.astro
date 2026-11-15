@@ -1,0 +1,93 @@
+---
+import type { Blok } from "../../lib/content";
+
+interface Props {
+  blok: Extract<Blok, { type: "prijzen" }>;
+}
+const { blok } = Astro.props;
+---
+
+<section class="sectie prijzen" data-in-beeld>
+  <div class="container">
+    {
+      (blok.kop || blok.subkop) && (
+        <header class="prijzen__kop">
+          {blok.kop && <h2>{blok.kop}</h2>}
+          {blok.subkop && <p>{blok.subkop}</p>}
+        </header>
+      )
+    }
+    <ul class="prijzen__lijst">
+      {
+        blok.pakketten.map((p) => (
+          <li class:list={["prijzen__kaart", { "prijzen__kaart--populair": p.populair }]}>
+            {p.populair && <span class="prijzen__label">Populair</span>}
+            <h3>{p.naam}</h3>
+            {p.omschrijving && <p class="prijzen__omschrijving">{p.omschrijving}</p>}
+            <p class="prijzen__prijs">
+              <span class="sr-only">Prijs: </span>€&nbsp;{p.prijs}
+            </p>
+            {p.toelichting && <p class="prijzen__toelichting">{p.toelichting}</p>}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .prijzen__kop {
+    text-align: center;
+    margin-bottom: var(--r-8);
+  }
+  .prijzen__lijst {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--r-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .prijzen__kaart {
+    position: relative;
+    padding: var(--r-6);
+    border-radius: var(--hoek-md);
+    background: var(--kaart);
+    color: var(--kaart-tekst);
+    box-shadow: var(--schaduw);
+  }
+  .prijzen__kaart--populair {
+    outline: 3px solid var(--petrol-800);
+  }
+  .prijzen__kaart h3 {
+    color: var(--petrol-800);
+    margin-bottom: var(--r-1);
+  }
+  .prijzen__label {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: var(--r-1) var(--r-3);
+    border-radius: var(--hoek-pil);
+    background: var(--petrol-800);
+    color: var(--wit);
+    font-size: var(--tekst-sm);
+    font-weight: 600;
+  }
+  .prijzen__omschrijving,
+  .prijzen__toelichting {
+    font-size: var(--tekst-sm);
+    color: var(--kaart-tekst-zacht);
+  }
+  .prijzen__prijs {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: var(--r-4) 0;
+    color: var(--kaart-tekst);
+  }
+  .prijzen__toelichting {
+    margin: 0;
+  }
+</style>

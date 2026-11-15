@@ -1,0 +1,21 @@
+---
+import Basis from "../layouts/Basis.astro";
+import formulier from "../data/formulier.json";
+---
+
+<Basis titel="Bedankt" noindex>
+  <section class="sectie">
+    <div class="container container--smal bedankt">
+      <h1>{formulier.bedanktTitel}</h1>
+      <p>{formulier.bedanktTekst}</p>
+      <p><a class="knop" href="/">Terug naar de homepage</a></p>
+    </div>
+  </section>
+</Basis>
+
+<style>
+  .bedankt {
+    text-align: center;
+    padding-block: var(--r-12);
+  }
+</style>

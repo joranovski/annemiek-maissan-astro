@@ -1,0 +1,19 @@
+---
+import type { GetStaticPaths } from "astro";
+import Basis from "../layouts/Basis.astro";
+import Blokken from "../components/Blokken.astro";
+import { paginas, type Pagina } from "../lib/content";
+
+export const getStaticPaths = (async () => {
+  return (await paginas()).filter((p) => p.id !== "home").map((p) => ({ params: { slug: p.id }, props: { pagina: p } }));
+}) satisfies GetStaticPaths;
+
+const { pagina } = Astro.props as { pagina: Pagina };
+const deelbeeld = pagina.data.blocks.find((b) => b.type === "hero")?.foto;
+const heeftTitel = pagina.data.blocks.some((b) => b.type === "hero" && b.titel);
+---
+
+<Basis titel={pagina.data.title} metaTitle={pagina.data.metaTitle} omschrijving={pagina.data.metaDescription} deelbeeld={deelbeeld}>
+  {!heeftTitel && <h1 class="sr-only">{pagina.data.title}</h1>}
+  <Blokken blokken={pagina.data.blocks} pagina={pagina.id} />
+</Basis>

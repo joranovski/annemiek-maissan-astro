@@ -1,0 +1,121 @@
+---
+import formulier from "../../data/formulier.json";
+import { md, type Blok } from "../../lib/content";
+
+// Netlify Forms: Netlify vindt het formulier in de gebouwde HTML. Ontvangers stel je in bij
+// Netlify → Forms → Form notifications (zie README).
+interface Props {
+  blok: Extract<Blok, { type: "formulier" }>;
+  pagina: string;
+}
+const { blok, pagina } = Astro.props;
+const id = `contact-${pagina}`;
+---
+
+<section class="sectie formulier" data-in-beeld id="contact">
+  <div class="container container--smal">
+    <div class="formulier__paneel">
+      <h2>{blok.kop || formulier.kop}</h2>
+      {blok.intro && <div class="tekst" set:html={md(blok.intro)} />}
+      <form name="contact" method="POST" action="/bedankt" data-netlify="true" netlify-honeypot="bot-veld">
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="hidden" name="pagina" value={pagina} />
+        <p class="formulier__bot" aria-hidden="true">
+          <label>Niet invullen: <input name="bot-veld" tabindex="-1" autocomplete="off" /></label>
+        </p>
+        <div class="formulier__raster">
+          <p class="veld">
+            <label for={`${id}-naam`}>Naam <span aria-hidden="true">*</span></label>
+            <input id={`${id}-naam`} name="naam" type="text" autocomplete="name" required />
+          </p>
+          <p class="veld">
+            <label for={`${id}-email`}>E-mailadres <span aria-hidden="true">*</span></label>
+            <input id={`${id}-email`} name="email" type="email" autocomplete="email" required />
+          </p>
+          <p class="veld veld--breed">
+            <label for={`${id}-keuze`}>{formulier.keuzeLabel}</label>
+            <select id={`${id}-keuze`} name="keuze">
+              <option value="">{formulier.keuzeLeeg}</option>
+              {formulier.keuzes.map((k) => <option>{k}</option>)}
+            </select>
+          </p>
+          <p class="veld veld--breed">
+            <label for={`${id}-vraag`}>Opmerking of vraag</label>
+            <textarea id={`${id}-vraag`} name="vraag" rows="5"></textarea>
+          </p>
+        </div>
+        <p class="formulier__voet">
+          <button class="knop knop--licht" type="submit">{formulier.knop}</button>
+          <span class="formulier__verplicht">* verplicht</span>
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .formulier__paneel {
+    padding: var(--r-8);
+    border-radius: var(--hoek-md);
+    background: var(--paneel-vast);
+    box-shadow: var(--schaduw);
+  }
+  .formulier__raster {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 0 var(--r-6);
+  }
+  .veld {
+    display: grid;
+    gap: var(--r-1);
+    margin: 0 0 var(--r-4);
+  }
+  .veld--breed {
+    grid-column: 1 / -1;
+  }
+  label {
+    font-weight: 600;
+    font-size: var(--tekst-sm);
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: var(--r-2) var(--r-3);
+    border: 1px solid var(--veld-rand);
+    border-radius: var(--hoek-sm);
+    background: var(--veld-bg);
+    color: var(--kaart-tekst);
+    font: inherit;
+  }
+  textarea {
+    resize: vertical;
+  }
+  .formulier__bot {
+    position: absolute;
+    left: -9999px;
+  }
+  .formulier__voet {
+    display: flex;
+    align-items: center;
+    gap: var(--r-4);
+    margin: var(--r-2) 0 0;
+  }
+  .knop--licht {
+    background: var(--wit);
+    color: var(--petrol-800);
+  }
+  .knop--licht:hover {
+    background: var(--petrol-100);
+  }
+  .formulier__verplicht {
+    font-size: var(--tekst-sm);
+    color: var(--tekst-zacht);
+  }
+  @media (max-width: 40rem) {
+    .formulier__paneel {
+      padding: var(--r-6);
+    }
+  }
+</style>

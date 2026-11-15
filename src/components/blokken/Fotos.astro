@@ -1,0 +1,51 @@
+---
+import Foto from "../Foto.astro";
+import type { Blok } from "../../lib/content";
+
+interface Props {
+  blok: Extract<Blok, { type: "fotos" }>;
+}
+const { blok } = Astro.props;
+---
+
+<section class="sectie fotos" data-in-beeld>
+  <div class="container">
+    {blok.kop && <h2 class="fotos__kop">{blok.kop}</h2>}
+    <div class="fotos__raster">
+      {
+        blok.fotos.map((f) => (
+          <figure>
+            <Foto src={f.src} alt={f.alt ?? ""} widths={[480, 960]} sizes="(min-width: 48rem) 50vw, 100vw" />
+            {f.bijschrift && <figcaption>{f.bijschrift}</figcaption>}
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .fotos__kop {
+    text-align: center;
+  }
+  .fotos__raster {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--r-6);
+  }
+  figure {
+    margin: 0;
+  }
+  figure :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--hoek-md);
+    box-shadow: var(--schaduw);
+  }
+  figcaption {
+    margin-top: var(--r-2);
+    font-size: var(--tekst-sm);
+    color: var(--tekst-zacht);
+  }
+</style>

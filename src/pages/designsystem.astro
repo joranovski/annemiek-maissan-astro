@@ -1,0 +1,78 @@
+---
+// Overzicht van de ontwerptokens en bouwstenen (niet in het menu, noindex)
+import Basis from "../layouts/Basis.astro";
+import Icon from "../components/Icon.astro";
+
+const kleuren = [
+  ["--petrol-950", "Donkerste petrol"],
+  ["--petrol-900", "Voet"],
+  ["--petrol-800", "Panelen, knoppen"],
+  ["--petrol-700", "Kop-tekst"],
+  ["--petrol-600", "Achtergrond"],
+  ["--petrol-500", "Oude achtergrond"],
+  ["--petrol-100", "Licht"],
+  ["--framboos-500", "Accent"],
+  ["--grijs-50", "Velden"],
+  ["--grijs-500", "Zachte tekst op wit"],
+  ["--grijs-800", "Tekst op wit"],
+];
+---
+
+<Basis titel="Designsystem" noindex>
+  <section class="sectie">
+    <div class="container ds">
+      <h1>Designsystem</h1>
+      <h2>Kleuren</h2>
+      <ul class="ds__stalen">
+        {
+          kleuren.map(([v, naam]) => (
+            <li>
+              <span class="ds__staal" style={`background: var(${v})`} />
+              <code>{v}</code>
+              <span>{naam}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <h2>Letters</h2>
+      <p style="font: var(--kop-lg)/1.1 var(--font-kop)">Calendas Plus – koppen</p>
+      <p style="font-size: var(--tekst-lg)">Inter – lopende tekst, groot</p>
+      <p>Inter – lopende tekst</p>
+      <p style="font-size: var(--tekst-sm)">Inter – klein</p>
+      <h2>Knoppen en iconen</h2>
+      <p class="ds__rij">
+        <a class="knop" href="#">Knop</a>
+        <Icon naam="vinkje" />
+        <Icon naam="mail" />
+        <Icon naam="linkedin" />
+        <Icon naam="youtube" />
+        <Icon naam="facebook" />
+      </p>
+    </div>
+  </section>
+</Basis>
+
+<style>
+  .ds__stalen {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: var(--r-4);
+    padding: 0;
+    list-style: none;
+  }
+  .ds__stalen li {
+    display: grid;
+    gap: var(--r-1);
+    font-size: var(--tekst-sm);
+  }
+  .ds__staal {
+    height: 4rem;
+    border-radius: var(--hoek-sm);
+    box-shadow: inset 0 0 0 1px hsl(0 0% 100% / 0.4);
+  }
+  .ds__rij {
+    display: flex;
+    align-items: center;
+    gap: var(--r-4);
+  }
+</style>

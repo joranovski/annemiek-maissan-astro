@@ -1,0 +1,72 @@
+---
+import Icon from "../Icon.astro";
+import { md, type Blok } from "../../lib/content";
+
+interface Props {
+  blok: Extract<Blok, { type: "punten" }>;
+}
+const { blok } = Astro.props;
+---
+
+<section class="sectie punten" data-in-beeld>
+  <div class="container">
+    {
+      (blok.kop || blok.intro) && (
+        <header class="punten__kop">
+          {blok.kop && <h2>{blok.kop}</h2>}
+          {blok.intro && <div class="tekst" set:html={md(blok.intro)} />}
+        </header>
+      )
+    }
+    {
+      blok.punten.length > 0 && (
+        <ul class="punten__lijst">
+          {blok.punten.map((p) => (
+            <li class="punten__item">
+              <Icon naam="vinkje" class="punten__vinkje" />
+              <span set:html={md(p, true)} />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    {blok.afsluiting && <div class="punten__afsluiting tekst" set:html={md(blok.afsluiting)} />}
+  </div>
+</section>
+
+<style>
+  .punten__kop,
+  .punten__afsluiting {
+    max-width: var(--smal);
+    margin-inline: auto;
+    text-align: center;
+  }
+  .punten__kop {
+    margin-bottom: var(--r-8);
+  }
+  .punten__afsluiting {
+    margin-top: var(--r-8);
+  }
+  .punten__lijst {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: var(--r-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .punten__item {
+    display: flex;
+    align-items: center;
+    gap: var(--r-4);
+    padding: var(--r-4) var(--r-6);
+    border-radius: 2rem;
+    background: var(--paneel);
+    --vinkje: var(--petrol-800);
+  }
+  .punten__item :global(.punten__vinkje) {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--wit);
+  }
+</style>

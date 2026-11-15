@@ -1,0 +1,34 @@
+---
+import type { Blok } from "../lib/content";
+import Hero from "./blokken/Hero.astro";
+import Punten from "./blokken/Punten.astro";
+import Tekst from "./blokken/Tekst.astro";
+import Fotos from "./blokken/Fotos.astro";
+import Prijzen from "./blokken/Prijzen.astro";
+import Formulier from "./blokken/Formulier.astro";
+
+interface Props {
+  blokken: Blok[];
+  pagina: string;
+}
+const { blokken, pagina } = Astro.props;
+---
+
+{
+  blokken.map((b, i) => {
+    switch (b.type) {
+      case "hero":
+        return <Hero blok={b} eerste={i === 0} />;
+      case "punten":
+        return <Punten blok={b} />;
+      case "tekst":
+        return <Tekst blok={b} />;
+      case "fotos":
+        return <Fotos blok={b} />;
+      case "prijzen":
+        return <Prijzen blok={b} />;
+      case "formulier":
+        return <Formulier blok={b} pagina={pagina} />;
+    }
+  })
+}

@@ -1,0 +1,290 @@
+# Sveltia CMS voor annemiekmaissan.nl
+# Opslaan = een commit op GitHub; Netlify zet de site daarna binnen ± 3 minuten live.
+# Controleer na een wijziging: python3 -c "import yaml;yaml.safe_load(open('public/admin/config.yml'))"
+
+backend:
+  name: github
+  repo: joranovski/annemiek-maissan-astro
+  branch: main
+  commit_messages:
+    create: "Nieuwe pagina: {{slug}}"
+    update: "Pagina bijgewerkt: {{slug}}"
+    delete: "Pagina verwijderd: {{slug}}"
+    uploadMedia: "Foto toegevoegd: {{path}}"
+    deleteMedia: "Foto verwijderd: {{path}}"
+
+site_url: https://www.annemiekmaissan.nl
+display_url: https://www.annemiekmaissan.nl
+media_folder: public/uploads
+public_folder: /uploads
+
+media_libraries:
+  default:
+    config:
+      transformations:
+        raster_image:
+          format: webp
+          quality: 90
+          width: 2400
+          height: 2400
+
+collections:
+  - name: pages
+    label: Pagina's
+    label_singular: Pagina
+    description: De pagina's van de site. Elke pagina bestaat uit blokken die je kunt toevoegen, aanpassen en verschuiven.
+    folder: src/content/pages
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    create: true
+    delete: true
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields: [order, title]
+    fields:
+      - name: title
+        label: Titel
+        widget: string
+        hint: Staat in het menu en in de titel van het browsertabblad.
+      - name: order
+        label: Volgorde in het menu
+        widget: number
+        value_type: int
+        required: false
+        hint: Lager nummer = eerder in het menu.
+      - name: listed
+        label: Tonen in het menu
+        widget: boolean
+        default: true
+        required: false
+      - name: draft
+        label: Concept (nog niet op de site)
+        widget: boolean
+        default: false
+        required: false
+      - name: blocks
+        label: Blokken
+        label_singular: Blok
+        widget: list
+        required: false
+        typeKey: type
+        hint: Voeg blokken toe en sleep ze in de goede volgorde.
+        types:
+          - name: hero
+            label: Grote foto met welkomsttekst
+            widget: object
+            summary: "{{titel}}"
+            fields:
+              - name: titel
+                label: Titel
+                widget: string
+                required: false
+                hint: Laat leeg voor alleen een fotobanner.
+              - name: tekst
+                label: Tekst
+                widget: markdown
+                required: false
+                buttons: [bold, italic, link]
+                editor_components: []
+              - name: foto
+                label: Foto
+                widget: image
+                required: false
+              - name: fotoAlt
+                label: Omschrijving van de foto
+                widget: string
+                required: false
+                hint: Voor wie de foto niet kan zien, bijvoorbeeld "Annemiek lacht in de zangstudio".
+              - name: fotoFocus
+                label: Welk deel van de foto moet zichtbaar blijven?
+                widget: select
+                default: midden
+                required: false
+                options:
+                  - { label: Bovenkant, value: boven }
+                  - { label: Midden, value: midden }
+                  - { label: Onderkant, value: onder }
+              - name: uitlijning
+                label: Plaats van de tekst
+                widget: select
+                default: links
+                required: false
+                options:
+                  - { label: Links, value: links }
+                  - { label: Gecentreerd, value: midden }
+                  - { label: Rechts (foto links), value: rechts }
+
+          - name: punten
+            label: Lijst met vinkjes
+            widget: object
+            summary: "{{kop}}"
+            fields:
+              - name: kop
+                label: Kop
+                widget: string
+                required: false
+              - name: intro
+                label: Inleiding
+                widget: markdown
+                required: false
+                buttons: [bold, italic, link]
+                editor_components: []
+              - name: punten
+                label: Punten
+                label_singular: Punt
+                widget: list
+                required: false
+                field:
+                  name: punt
+                  label: Punt
+                  widget: string
+              - name: afsluiting
+                label: Tekst onder de lijst
+                widget: markdown
+                required: false
+                buttons: [bold, italic, link]
+                editor_components: []
+
+          - name: tekst
+            label: Tekst (met foto)
+            widget: object
+            summary: "{{kop}}"
+            fields:
+              - name: kop
+                label: Kop
+                widget: string
+                required: false
+              - name: tekst
+                label: Tekst
+                widget: markdown
+                required: false
+                buttons: [bold, italic, link, bulleted-list, numbered-list]
+                editor_components: []
+              - name: foto
+                label: Foto ernaast
+                widget: image
+                required: false
+              - name: fotoAlt
+                label: Omschrijving van de foto
+                widget: string
+                required: false
+              - name: knoppen
+                label: Knoppen
+                label_singular: Knop
+                widget: list
+                required: false
+                fields:
+                  - { name: label, label: Tekst op de knop, widget: string }
+                  - { name: link, label: Link, widget: string, hint: "Bijvoorbeeld /koorscholing, #contact of https://…" }
+
+          - name: fotos
+            label: Foto's
+            widget: object
+            summary: "{{kop}}"
+            fields:
+              - name: kop
+                label: Kop
+                widget: string
+                required: false
+              - name: fotos
+                label: Foto's
+                label_singular: Foto
+                widget: list
+                required: false
+                fields:
+                  - { name: src, label: Foto, widget: image }
+                  - { name: alt, label: Omschrijving van de foto, widget: string, required: false }
+                  - { name: bijschrift, label: Bijschrift, widget: string, required: false }
+
+          - name: prijzen
+            label: Prijzen
+            widget: object
+            summary: "{{kop}}"
+            fields:
+              - name: kop
+                label: Kop
+                widget: string
+                required: false
+              - name: subkop
+                label: Tekst onder de kop
+                widget: string
+                required: false
+              - name: pakketten
+                label: Prijzen
+                label_singular: Prijs
+                widget: list
+                required: false
+                summary: "{{naam}}: € {{prijs}}"
+                fields:
+                  - { name: naam, label: Naam, widget: string }
+                  - { name: omschrijving, label: Omschrijving, widget: string, required: false }
+                  - { name: prijs, label: Prijs in euro, widget: string, hint: "Zonder €-teken, bijvoorbeeld 50 of 52 / 58" }
+                  - { name: toelichting, label: Toelichting, widget: string, required: false }
+                  - { name: populair, label: Label 'Populair' tonen, widget: boolean, default: false, required: false }
+
+          - name: formulier
+            label: Contactformulier
+            widget: object
+            summary: "{{kop}}"
+            fields:
+              - name: kop
+                label: Kop
+                widget: string
+                required: false
+                default: Contactformulier
+              - name: intro
+                label: Tekst boven het formulier
+                widget: markdown
+                required: false
+                buttons: [bold, italic, link]
+                editor_components: []
+
+      - name: metaTitle
+        label: Titel voor Google (optioneel)
+        widget: string
+        required: false
+        hint: Laat leeg om "Titel - Annemiek Maissan" te gebruiken.
+      - name: metaDescription
+        label: Omschrijving voor Google (optioneel)
+        widget: text
+        required: false
+        hint: Eén of twee zinnen, maximaal ± 155 tekens.
+
+  - name: instellingen
+    label: Instellingen
+    files:
+      - name: site
+        label: Gegevens van de zangstudio
+        file: src/data/site.json
+        fields:
+          - { name: naam, label: Naam van de zangstudio, widget: string }
+          - { name: titel, label: Naam in de kop en tabbladtitel, widget: string }
+          - { name: omschrijving, label: Standaard omschrijving voor Google, widget: text }
+          - { name: email, label: E-mailadres, widget: string }
+          - name: links
+            label: Sociale media
+            label_singular: Link
+            widget: list
+            required: false
+            fields:
+              - name: label
+                label: Kanaal
+                widget: select
+                options: [LinkedIn, YouTube, Facebook, Instagram]
+              - { name: url, label: Adres (https://…), widget: string }
+      - name: formulier
+        label: Contactformulier
+        file: src/data/formulier.json
+        fields:
+          - { name: kop, label: Standaard kop, widget: string }
+          - { name: keuzeLabel, label: Vraag bij de keuzelijst, widget: string }
+          - { name: keuzeLeeg, label: Eerste regel van de keuzelijst, widget: string }
+          - name: keuzes
+            label: Keuzes
+            label_singular: Keuze
+            widget: list
+            field: { name: keuze, label: Keuze, widget: string }
+          - { name: knop, label: Tekst op de verstuurknop, widget: string }
+          - { name: bedanktTitel, label: Kop op de bedankpagina, widget: string }
+          - { name: bedanktTekst, label: Tekst op de bedankpagina, widget: text }

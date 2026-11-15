@@ -1,0 +1,12 @@
+---
+import { getEntry } from "astro:content";
+import Basis from "../layouts/Basis.astro";
+import Blokken from "../components/Blokken.astro";
+
+const pagina = (await getEntry("pages", "home"))!;
+const deelbeeld = pagina.data.blocks.find((b) => b.type === "hero")?.foto;
+---
+
+<Basis titel={pagina.data.title} metaTitle={pagina.data.metaTitle} omschrijving={pagina.data.metaDescription} deelbeeld={deelbeeld}>
+  <Blokken blokken={pagina.data.blocks} pagina="home" />
+</Basis>

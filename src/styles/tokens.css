@@ -1,0 +1,88 @@
+/* Ontwerptokens van annemiekmaissan.nl, overgenomen uit de Kirby-site (CodyHouse-kleuren).
+   Componenten gebruiken alleen deze tokens. */
+@font-face {
+  font-family: "Calendas Plus";
+  src: url("/fonts/calendas_plus-webfont.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Calendas Plus";
+  src: url("/fonts/calendas_plus_bold-webfont.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  /* Merk: petrol (tint 186) */
+  --petrol-950: hsl(186 100% 11%);
+  --petrol-900: hsl(186 100% 14%);
+  --petrol-800: hsl(186 100% 17%);
+  --petrol-700: hsl(186 100% 21%);
+  --petrol-600: hsl(186 100% 27%); /* achtergrond: donkerder dan de oude 32% zodat witte tekst ≥ 4,5:1 haalt */
+  --petrol-500: hsl(186 100% 32%);
+  --petrol-200: hsl(186 50% 85%);
+  --petrol-100: hsl(186 45% 94%);
+
+  /* Accent: framboos (tint 342) */
+  --framboos-600: hsl(342 89% 42%);
+  --framboos-500: hsl(342 89% 48%);
+
+  /* Neutraal */
+  --wit: #fff;
+  --grijs-50: hsl(240 4% 96%);
+  --grijs-300: hsl(240 4% 72%);
+  --grijs-500: hsl(225 4% 42%);
+  --grijs-800: hsl(230 7% 23%);
+  --zwart: hsl(230 13% 9%);
+
+  /* Rollen */
+  --bg: var(--petrol-600);
+  --tekst: var(--wit);
+  --tekst-zacht: hsl(186 30% 92%);
+  --paneel: hsl(186 100% 8% / 0.42);
+  --paneel-vast: var(--petrol-800);
+  --kaart: var(--wit);
+  --kaart-tekst: var(--grijs-800);
+  --kaart-tekst-zacht: var(--grijs-500);
+  --kop-bg: var(--wit);
+  --kop-tekst: var(--petrol-700);
+  --voet-bg: var(--petrol-900);
+  --knop: var(--petrol-800);
+  --knop-hover: var(--petrol-950);
+  --accent: var(--framboos-500);
+  --focus: hsl(48 100% 60%);
+  --veld-bg: var(--grijs-50);
+  --veld-rand: var(--grijs-500);
+
+  /* Letters */
+  --font-kop: "Calendas Plus", Georgia, serif;
+  --font-tekst: "Inter", system-ui, sans-serif;
+  --tekst-sm: 0.9375rem;
+  --tekst-md: 1.0625rem;
+  --tekst-lg: 1.25rem;
+  --kop-sm: 1.5rem;
+  --kop-md: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem);
+  --kop-lg: clamp(2rem, 1.5rem + 2.4vw, 3.25rem);
+
+  /* Ruimte (4-punts) */
+  --r-1: 0.25rem;
+  --r-2: 0.5rem;
+  --r-3: 0.75rem;
+  --r-4: 1rem;
+  --r-6: 1.5rem;
+  --r-8: 2rem;
+  --r-12: 3rem;
+  --r-16: 4rem;
+  --r-24: 6rem;
+
+  /* Vorm */
+  --hoek-sm: 6px;
+  --hoek-md: 12px;
+  --hoek-pil: 999px;
+  --schaduw: 0 1px 2px hsl(186 100% 5% / 0.15), 0 8px 24px hsl(186 100% 5% / 0.22);
+
+  --breed: 72rem;
+  --smal: 46rem;
+  --kop-hoogte: 4rem;
+}

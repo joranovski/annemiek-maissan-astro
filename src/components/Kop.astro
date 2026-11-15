@@ -1,0 +1,132 @@
+---
+import { menu } from "../lib/content";
+import site from "../data/site.json";
+import Icon from "./Icon.astro";
+
+const items = await menu();
+const huidig = Astro.url.pathname.replace(/\.html$/, "");
+---
+
+<header class="kop">
+  <div class="container kop__rij">
+    <a class="kop__logo" href="/" aria-label={`${site.titel}, naar de homepage`}>{site.titel}</a>
+    <button class="kop__menuknop" type="button" aria-expanded="false" aria-controls="hoofdmenu">
+      <Icon naam="menu" />
+      <span class="sr-only">Menu</span>
+    </button>
+    <nav id="hoofdmenu" class="kop__nav" aria-label="Hoofdmenu">
+      <ul>
+        {
+          items.map((i) => (
+            <li>
+              <a href={i.url} aria-current={huidig === i.url ? "page" : undefined}>
+                {i.titel}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .kop {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--kop-bg);
+    color: var(--kop-tekst);
+    padding-top: env(safe-area-inset-top);
+    box-shadow: 0 1px 0 hsl(186 30% 80%);
+  }
+  .kop__rij {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--r-4);
+    min-height: var(--kop-hoogte);
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+  }
+  .kop__logo {
+    font-family: var(--font-kop);
+    font-size: 1.625rem;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .kop__nav ul {
+    display: flex;
+    gap: var(--r-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .kop__nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-kop);
+    font-size: 1.125rem;
+    text-decoration: none;
+  }
+  .kop__nav a:hover,
+  .kop__nav a[aria-current="page"] {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  .kop__menuknop {
+    display: none;
+    width: 44px;
+    height: 44px;
+    margin-right: calc(-1 * var(--r-2));
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  /* Telefoon: menuknop, het menu klapt onder de kop open */
+  @media (max-width: 40rem) {
+    :global(.js) .kop__menuknop {
+      display: inline-grid;
+      place-items: center;
+    }
+    :global(.js) .kop__nav {
+      display: none;
+      position: absolute;
+      inset: 100% 0 auto;
+      background: var(--kop-bg);
+      box-shadow: 0 12px 24px hsl(186 100% 5% / 0.18);
+      padding: var(--r-2) var(--r-6) var(--r-4);
+    }
+    :global(.js) .kop__nav.is-open {
+      display: block;
+    }
+    .kop__nav ul {
+      flex-direction: column;
+      gap: 0;
+    }
+    /* Zonder JS staat het menu gewoon onder het logo */
+    .kop__rij {
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+<script>
+  const knop = document.querySelector<HTMLButtonElement>(".kop__menuknop");
+  const nav = document.getElementById("hoofdmenu");
+  knop?.addEventListener("click", () => {
+    const open = knop.getAttribute("aria-expanded") === "true";
+    knop.setAttribute("aria-expanded", String(!open));
+    nav?.classList.toggle("is-open", !open);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && nav?.classList.contains("is-open")) {
+      nav.classList.remove("is-open");
+      knop?.setAttribute("aria-expanded", "false");
+      knop?.focus();
+    }
+  });
+</script>

@@ -1,0 +1,110 @@
+---
+import "../styles/global.css";
+import { getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import Kop from "../components/Kop.astro";
+import Voet from "../components/Voet.astro";
+import site from "../data/site.json";
+
+interface Props {
+  titel: string; // paginatitel, zonder sitenaam
+  metaTitle?: string; // volledige titel als die afwijkt
+  omschrijving?: string;
+  deelbeeld?: ImageMetadata;
+  noindex?: boolean;
+}
+
+const { titel, metaTitle, omschrijving, deelbeeld, noindex = false } = Astro.props;
+const volledigeTitel = metaTitle || `${titel} - ${site.titel}`;
+const beschrijving = omschrijving || site.omschrijving;
+// Canonical zonder .html en zonder /index, zoals de oude Kirby-adressen
+const pad = Astro.url.pathname.replace(/\.html$/, "").replace(/\/index$/, "/") || "/";
+const canonical = new URL(pad, Astro.site).href;
+const og = deelbeeld
+  ? await getImage({ src: deelbeeld, width: 1200, height: 630, fit: "cover", format: "jpg" })
+  : undefined;
+const ogUrl = og ? new URL(og.src, Astro.site).href : undefined;
+
+const jsonld = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: site.naam,
+  url: Astro.site?.href,
+  email: site.email,
+  description: site.omschrijving,
+  areaServed: "Amersfoort",
+  founder: { "@type": "Person", name: site.titel },
+  sameAs: site.links.map((l) => l.url),
+  ...(ogUrl ? { image: ogUrl } : {}),
+};
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{volledigeTitel}</title>
+    <meta name="description" content={beschrijving} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" href="/fonts/calendas_plus-webfont.woff2" as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.naam} />
+    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:title" content={volledigeTitel} />
+    <meta property="og:description" content={beschrijving} />
+    <meta property="og:url" content={canonical} />
+    {
+      og && (
+        <>
+          <meta property="og:image" content={ogUrl} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+        </>
+      )
+    }
+    <meta name="twitter:card" content={og ? "summary_large_image" : "summary"} />
+    {!noindex && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
+  </head>
+  <body>
+    <a class="skiplink" href="#inhoud">Naar de inhoud</a>
+    <Kop />
+    <main id="inhoud">
+      <slot />
+    </main>
+    <Voet />
+    <script>
+      // Blokken zacht laten verschijnen als ze in beeld komen (niet bij reduced motion)
+      const items = document.querySelectorAll<HTMLElement>("[data-in-beeld]");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add("js-in-beeld");
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px" },
+        );
+        items.forEach((el) => {
+          if (el.getBoundingClientRect().top > innerHeight) {
+            el.classList.add("js-wacht");
+            io.observe(el);
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

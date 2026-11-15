@@ -1,0 +1,9 @@
+{
+  "kop": "Contactformulier",
+  "keuzeLabel": "Maak een keuze",
+  "keuzeLeeg": "Wat kunnen we voor je betekenen?",
+  "keuzes": ["Proefles", "Losse les", "Strippenkaart", "Stemcoaching", "Koorscholing informatie"],
+  "knop": "Verstuur",
+  "bedanktTitel": "Bedankt voor je bericht",
+  "bedanktTekst": "Annemiek neemt zo snel mogelijk contact met je op."
+}

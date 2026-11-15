@@ -1,0 +1,61 @@
+---
+import Foto from "../Foto.astro";
+import { md, type Blok } from "../../lib/content";
+
+interface Props {
+  blok: Extract<Blok, { type: "tekst" }>;
+}
+const { blok } = Astro.props;
+---
+
+<section class:list={["sectie", "tekstblok", { "tekstblok--foto": blok.foto }]} data-in-beeld>
+  <div class:list={["container", { "container--smal": !blok.foto }, "tekstblok__raster"]}>
+    {blok.foto && <Foto src={blok.foto} alt={blok.fotoAlt ?? ""} widths={[480, 960]} sizes="(min-width: 48rem) 50vw, 100vw" class="tekstblok__foto" />}
+    <div class="tekstblok__paneel">
+      {blok.kop && <h2>{blok.kop}</h2>}
+      {blok.tekst && <div class="tekst" set:html={md(blok.tekst)} />}
+      {
+        blok.knoppen.length > 0 && (
+          <p class="tekstblok__knoppen">
+            {blok.knoppen.map((k) => (
+              <a class="knop" href={k.link}>
+                {k.label}
+              </a>
+            ))}
+          </p>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .tekstblok__raster {
+    display: grid;
+    gap: var(--r-8);
+    align-items: center;
+  }
+  .tekstblok--foto .tekstblok__raster {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  }
+  .tekstblok__paneel {
+    padding: var(--r-8);
+    border-radius: var(--hoek-md);
+    background: var(--paneel);
+  }
+  .tekstblok :global(img.tekstblok__foto) {
+    border-radius: var(--hoek-md);
+    box-shadow: var(--schaduw);
+  }
+  .tekstblok__knoppen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--r-3);
+    margin: var(--r-6) 0 0;
+  }
+  @media (max-width: 40rem) {
+    .tekstblok__paneel {
+      padding: var(--r-6);
+    }
+  }
+</style>
