@@ -1,5 +1,7 @@
 ---
 import formulier from "../../data/formulier.json";
+import site from "../../data/site.json";
+import Icon from "../Icon.astro";
 import { md, type Blok } from "../../lib/content";
 
 // Netlify Forms: Netlify vindt het formulier in de gebouwde HTML. Ontvangers stel je in bij
@@ -7,16 +9,24 @@ import { md, type Blok } from "../../lib/content";
 interface Props {
   blok: Extract<Blok, { type: "formulier" }>;
   pagina: string;
+  toon: "licht" | "donker";
 }
-const { blok, pagina } = Astro.props;
+const { blok, pagina, toon } = Astro.props;
 const id = `contact-${pagina}`;
 ---
 
-<section class="sectie formulier" data-in-beeld id="contact">
-  <div class="container container--smal">
-    <div class="formulier__paneel paneel">
+<section class:list={["sectie", "formulier", `toon-${toon}`]} data-in-beeld id="contact">
+  <div class="container formulier__raster-buiten">
+    <div class="formulier__intro">
+      {blok.label && <span class="label">{blok.label}</span>}
       <h2 class="formulier__titel">{blok.kop || formulier.kop}</h2>
       {blok.intro && <div class="tekst" set:html={md(blok.intro)} />}
+      <p class="formulier__mail">
+        <Icon naam="mail" />
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+    </div>
+    <div class="formulier__kaart">
       <form name="contact" aria-describedby={`${id}-uitleg`} method="POST" action="/bedankt" data-netlify="true" netlify-honeypot="bot-veld">
         <input type="hidden" name="form-name" value="contact" />
         <input type="hidden" name="pagina" value={pagina} />
@@ -46,7 +56,7 @@ const id = `contact-${pagina}`;
           </p>
         </div>
         <p class="formulier__voet">
-          <button class="knop knop--licht" type="submit">{formulier.knop}</button>
+          <button class="knop" type="submit">{formulier.knop}</button>
         </p>
       </form>
     </div>
@@ -54,27 +64,47 @@ const id = `contact-${pagina}`;
 </section>
 
 <style>
-  .formulier__paneel {
-    padding: var(--r-12) var(--r-12) var(--r-8);
-    background: var(--paneel-vast);
-    box-shadow: var(--schaduw);
+  /* Links de uitnodiging, rechts het formulier op een witte kaart */
+  .formulier__raster-buiten {
+    display: grid;
+    gap: var(--r-8) var(--r-16);
+    max-inline-size: 64rem;
+  }
+  @container sectie (width > 52rem) {
+    .formulier__raster-buiten {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
   }
   .formulier__titel {
-    text-align: center;
-    margin-bottom: var(--r-8);
+    font-size: var(--kop-lg);
   }
-  .formulier__titel::after {
-    content: "";
-    display: block;
-    width: 3rem;
-    height: 1px;
-    margin: var(--r-4) auto 0;
-    background: var(--lijn);
+  .formulier__intro .tekst {
+    color: var(--tekst-zacht);
+    font-size: var(--tekst-lg);
+  }
+  .formulier__mail {
+    display: flex;
+    align-items: center;
+    gap: var(--r-2);
+    margin-block-start: var(--r-6);
+  }
+  .formulier__mail a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+  }
+  .formulier__kaart {
+    padding: var(--r-8);
+    border-radius: var(--hoek-lg);
+    background: var(--wit);
+    color: var(--kaart-tekst);
+    box-shadow: var(--schaduw);
   }
   .formulier__raster {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-    gap: 0 var(--r-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap: 0 var(--r-4);
   }
   .veld {
     display: grid;
@@ -87,67 +117,61 @@ const id = `contact-${pagina}`;
   label {
     font-weight: 600;
     font-size: var(--tekst-sm);
-    letter-spacing: 0.01em;
-    color: var(--tekst-zacht);
+    color: var(--kaart-tekst);
   }
   input,
   select,
   textarea {
-    width: 100%;
-    min-height: 44px;
+    inline-size: 100%;
+    min-block-size: 48px;
     padding: var(--r-2) var(--r-3);
     border: 1px solid var(--veld-rand);
     border-radius: 10px;
     background: var(--wit);
     color: var(--kaart-tekst);
-    font: inherit;
+    transition: border-color 0.2s ease;
+  }
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: var(--petrol-700);
   }
   textarea {
     resize: vertical;
     min-block-size: 8rem;
     field-sizing: content;
   }
-  .formulier__uitleg {
-    font-size: var(--tekst-sm);
-    color: var(--tekst-zacht);
-    margin-block-end: var(--r-4);
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    border-color: var(--petrol-700);
   }
   /* Pas na een poging tot versturen een rode rand bij ongeldige velden */
   input:user-invalid {
     border-color: var(--framboos-600);
     box-shadow: 0 0 0 1px var(--framboos-600);
   }
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 1px;
-    border-color: var(--petrol-700);
+  .formulier__uitleg {
+    font-size: var(--tekst-sm);
+    color: var(--kaart-tekst-zacht);
+    margin-block-end: var(--r-4);
   }
   .formulier__bot {
     position: absolute;
-    left: -9999px;
+    inset-inline-start: -9999px;
   }
   .formulier__voet {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: var(--r-4);
-    margin: var(--r-4) 0 0;
+    margin: var(--r-2) 0 0;
   }
   .formulier__voet .knop {
-    min-inline-size: 10rem;
+    inline-size: 100%;
   }
-  .knop--licht {
-    background: var(--wit);
-    color: var(--petrol-800);
-  }
-  .knop--licht:hover {
-    background: var(--petrol-100);
-  }
-  @media (max-width: 40rem) {
-    .formulier__paneel {
-      padding: var(--r-8) var(--r-6) var(--r-6);
+  @media (width < 40rem) {
+    .formulier__kaart {
+      padding: var(--r-6);
+    }
+    .formulier__intro .tekst {
+      font-size: var(--tekst-md);
     }
   }
 </style>

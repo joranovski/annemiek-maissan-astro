@@ -4,13 +4,14 @@ import type { Blok } from "../../lib/content";
 
 interface Props {
   blok: Extract<Blok, { type: "fotos" }>;
+  toon: "licht" | "donker";
 }
-const { blok } = Astro.props;
+const { blok, toon } = Astro.props;
 ---
 
-<section class="sectie fotos" data-in-beeld>
+<section class:list={["sectie", "fotos", `toon-${toon}`]} data-in-beeld>
   <div class="container">
-    {blok.kop && <header class="sectie__kop"><h2>{blok.kop}</h2></header>}
+    {(blok.kop || blok.label) && <header class="sectie__kop">{blok.label && <span class="label">{blok.label}</span>}{blok.kop && <h2>{blok.kop}</h2>}</header>}
     <div class="fotos__raster">
       {
         blok.fotos.map((f) => (

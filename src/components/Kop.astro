@@ -10,6 +10,7 @@ const huidig = Astro.url.pathname.replace(/\.html$/, "");
 <header class="kop">
   <div class="container kop__rij">
     <a class="kop__logo" href="/" aria-label={`${site.titel}, naar de homepage`}>{site.titel}</a>
+    <a class="knop kop__actie" href="/#contact"><span class="kop__actie-lang">Proefles plannen</span><span class="kop__actie-kort">Proefles</span></a>
     <button class="kop__menuknop" type="button" aria-expanded="false" aria-controls="hoofdmenu">
       <Icon naam="menu" />
       <span class="sr-only">Menu</span>
@@ -35,7 +36,12 @@ const huidig = Astro.url.pathname.replace(/\.html$/, "");
     position: sticky;
     top: 0;
     z-index: 50;
+    /* Licht doorschijnend met vervaging; zonder ondersteuning gewoon wit */
     background: var(--kop-bg);
+    @supports (backdrop-filter: blur(1px)) {
+      background: color-mix(in oklab, var(--kop-bg) 86%, transparent);
+      backdrop-filter: saturate(1.4) blur(14px);
+    }
     color: var(--kop-tekst);
     padding-top: env(safe-area-inset-top);
     border-block-end: 1px solid var(--petrol-100);
@@ -55,6 +61,18 @@ const huidig = Astro.url.pathname.replace(/\.html$/, "");
     line-height: 1;
     text-decoration: none;
     white-space: nowrap;
+  }
+  .kop__actie {
+    order: 3;
+    min-block-size: 40px;
+    padding-inline: var(--r-4);
+    font-size: var(--tekst-sm);
+  }
+  .kop__actie-kort {
+    display: none;
+  }
+  .kop__nav {
+    margin-inline-start: auto;
   }
   .kop__nav ul {
     display: flex;
@@ -80,6 +98,7 @@ const huidig = Astro.url.pathname.replace(/\.html$/, "");
     text-decoration-color: currentColor;
   }
   .kop__menuknop {
+    order: 4;
     display: none;
     width: 44px;
     height: 44px;
@@ -90,8 +109,36 @@ const huidig = Astro.url.pathname.replace(/\.html$/, "");
     cursor: pointer;
   }
 
+  /* Hele smalle schermen (320 px): alles net iets compacter */
+  @media (width < 23rem) {
+    .kop__logo {
+      font-size: 1.1875rem;
+    }
+    .kop__actie {
+      padding-inline: var(--r-3);
+    }
+  }
+
   /* Telefoon: menuknop, het menu klapt onder de kop open */
   @media (max-width: 40rem) {
+    .kop__rij {
+      gap: var(--r-2);
+    }
+    :global(.js) .kop__rij {
+      flex-wrap: nowrap;
+    }
+    .kop__logo {
+      font-size: 1.375rem;
+    }
+    .kop__actie {
+      margin-inline-start: auto;
+    }
+    .kop__actie-lang {
+      display: none;
+    }
+    .kop__actie-kort {
+      display: inline;
+    }
     :global(.js) .kop__menuknop {
       display: inline-grid;
       place-items: center;

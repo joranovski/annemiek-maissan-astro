@@ -10,25 +10,36 @@ import Formulier from "./blokken/Formulier.astro";
 interface Props {
   blokken: Blok[];
   pagina: string;
+  paginaTitel: string;
 }
-const { blokken, pagina } = Astro.props;
+const { blokken, pagina, paginaTitel } = Astro.props;
+
+// Secties wisselen af tussen licht en donker. De hero is altijd donker; daarna begint het ritme met licht.
+// In het CMS kan per blok een vaste kleur gekozen worden; het ritme loopt dan vanaf dat blok verder.
+let vorige: "licht" | "donker" = "donker";
+const tonen = blokken.map((b) => {
+  if (b.type === "hero") return (vorige = "donker");
+  const gekozen = b.toon === "auto" ? (vorige === "donker" ? "licht" : "donker") : b.toon;
+  return (vorige = gekozen);
+});
 ---
 
 {
   blokken.map((b, i) => {
+    const toon = tonen[i];
     switch (b.type) {
       case "hero":
-        return <Hero blok={b} eerste={i === 0} />;
+        return <Hero blok={b} eerste={i === 0} paginaTitel={paginaTitel} />;
       case "punten":
-        return <Punten blok={b} />;
+        return <Punten blok={b} toon={toon} />;
       case "tekst":
-        return <Tekst blok={b} />;
+        return <Tekst blok={b} toon={toon} />;
       case "fotos":
-        return <Fotos blok={b} />;
+        return <Fotos blok={b} toon={toon} />;
       case "prijzen":
-        return <Prijzen blok={b} />;
+        return <Prijzen blok={b} toon={toon} />;
       case "formulier":
-        return <Formulier blok={b} pagina={pagina} />;
+        return <Formulier blok={b} pagina={pagina} toon={toon} />;
     }
   })
 }

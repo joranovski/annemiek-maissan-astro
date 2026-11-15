@@ -7,6 +7,7 @@ blocks:
   foto: annemiekmaissan-4.jpg
   fotoAlt: Annemiek Maissan presenteert achter een microfoon
   uitlijning: links
+  label: Spreken en presenteren
 - type: tekst
   kop: Hoe gebruik je je stem bij spreken?
   tekst: |-
@@ -24,6 +25,8 @@ blocks:
   - Intonatie en expressie
   - Articulatie
   - Spreeksnelheid en pauzes
+  label: Workshop
 - type: formulier
   kop: Contactformulier
+  label: Contact
 ---

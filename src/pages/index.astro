@@ -8,5 +8,5 @@ const deelbeeld = pagina.data.blocks.find((b) => b.type === "hero")?.foto;
 ---
 
 <Basis titel={pagina.data.title} metaTitle={pagina.data.metaTitle} omschrijving={pagina.data.metaDescription} deelbeeld={deelbeeld}>
-  <Blokken blokken={pagina.data.blocks} pagina="home" />
+  <Blokken blokken={pagina.data.blocks} pagina="home" paginaTitel={pagina.data.title} />
 </Basis>

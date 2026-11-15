@@ -10,10 +10,11 @@ export const getStaticPaths = (async () => {
 
 const { pagina } = Astro.props as { pagina: Pagina };
 const deelbeeld = pagina.data.blocks.find((b) => b.type === "hero")?.foto;
-const heeftTitel = pagina.data.blocks.some((b) => b.type === "hero" && b.titel);
+// Begint de pagina met een fotobanner zonder titel, dan toont de hero de paginatitel als kop
+const heeftTitel = pagina.data.blocks[0]?.type === "hero";
 ---
 
 <Basis titel={pagina.data.title} metaTitle={pagina.data.metaTitle} omschrijving={pagina.data.metaDescription} deelbeeld={deelbeeld}>
   {!heeftTitel && <h1 class="sr-only">{pagina.data.title}</h1>}
-  <Blokken blokken={pagina.data.blocks} pagina={pagina.id} />
+  <Blokken blokken={pagina.data.blocks} pagina={pagina.id} paginaTitel={pagina.data.title} />
 </Basis>
