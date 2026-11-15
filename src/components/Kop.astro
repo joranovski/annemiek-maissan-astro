@@ -38,7 +38,7 @@ const huidig = Astro.url.pathname.replace(/\.html$/, "");
     background: var(--kop-bg);
     color: var(--kop-tekst);
     padding-top: env(safe-area-inset-top);
-    box-shadow: 0 1px 0 hsl(186 30% 80%);
+    border-block-end: 1px solid var(--petrol-100);
   }
   .kop__rij {
     display: flex;
@@ -51,6 +51,7 @@ const huidig = Astro.url.pathname.replace(/\.html$/, "");
   .kop__logo {
     font-family: var(--font-kop);
     font-size: 1.625rem;
+    letter-spacing: -0.005em;
     line-height: 1;
     text-decoration: none;
     white-space: nowrap;
@@ -65,15 +66,18 @@ const huidig = Astro.url.pathname.replace(/\.html$/, "");
   .kop__nav a {
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
+    min-block-size: 44px;
     font-family: var(--font-kop);
-    font-size: 1.125rem;
-    text-decoration: none;
+    font-size: 1.1875rem;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
+    transition: text-decoration-color 0.2s ease;
   }
   .kop__nav a:hover,
   .kop__nav a[aria-current="page"] {
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
+    text-decoration-color: currentColor;
   }
   .kop__menuknop {
     display: none;

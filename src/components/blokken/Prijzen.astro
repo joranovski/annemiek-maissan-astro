@@ -11,7 +11,7 @@ const { blok } = Astro.props;
   <div class="container">
     {
       (blok.kop || blok.subkop) && (
-        <header class="prijzen__kop">
+        <header class="sectie__kop">
           {blok.kop && <h2>{blok.kop}</h2>}
           {blok.subkop && <p>{blok.subkop}</p>}
         </header>
@@ -25,7 +25,10 @@ const { blok } = Astro.props;
             <h3>{p.naam}</h3>
             {p.omschrijving && <p class="prijzen__omschrijving">{p.omschrijving}</p>}
             <p class="prijzen__prijs">
-              <span class="sr-only">Prijs: </span>€&nbsp;{p.prijs}
+              <span class="sr-only">Prijs: </span>
+              <span class="prijzen__valuta" aria-hidden="true">€</span>
+              <span class="sr-only">€</span>
+              {p.prijs}
             </p>
             {p.toelichting && <p class="prijzen__toelichting">{p.toelichting}</p>}
           </li>
@@ -36,9 +39,8 @@ const { blok } = Astro.props;
 </section>
 
 <style>
-  .prijzen__kop {
-    text-align: center;
-    margin-bottom: var(--r-8);
+  .prijzen .container {
+    max-width: 64rem;
   }
   .prijzen__lijst {
     display: grid;
@@ -50,14 +52,17 @@ const { blok } = Astro.props;
   }
   .prijzen__kaart {
     position: relative;
-    padding: var(--r-6);
-    border-radius: var(--hoek-md);
+    display: flex;
+    flex-direction: column;
+    padding: var(--r-8) var(--r-6) var(--r-6);
+    border-radius: var(--hoek-lg);
     background: var(--kaart);
     color: var(--kaart-tekst);
     box-shadow: var(--schaduw);
+    text-align: center;
   }
   .prijzen__kaart--populair {
-    outline: 3px solid var(--petrol-800);
+    box-shadow: 0 0 0 2px var(--petrol-700), var(--schaduw);
   }
   .prijzen__kaart h3 {
     color: var(--petrol-800);
@@ -68,26 +73,38 @@ const { blok } = Astro.props;
     top: 0;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: var(--r-1) var(--r-3);
+    padding: var(--r-1) var(--r-4);
     border-radius: var(--hoek-pil);
-    background: var(--petrol-800);
+    background: var(--petrol-700);
     color: var(--wit);
-    font-size: var(--tekst-sm);
+    font-size: 0.8125rem;
     font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
-  .prijzen__omschrijving,
-  .prijzen__toelichting {
+  .prijzen__omschrijving {
+    margin: 0;
     font-size: var(--tekst-sm);
     color: var(--kaart-tekst-zacht);
   }
   .prijzen__prijs {
-    font-size: 2rem;
-    font-weight: 600;
-    line-height: 1.2;
-    margin: var(--r-4) 0;
-    color: var(--kaart-tekst);
+    margin: var(--r-6) 0 0;
+    padding-bottom: var(--r-6);
+    border-bottom: 1px solid var(--petrol-100);
+    font-family: var(--font-kop);
+    font-size: 2.75rem;
+    line-height: 1;
+    color: var(--petrol-800);
+    white-space: nowrap;
+  }
+  .prijzen__valuta {
+    font-size: 0.55em;
+    vertical-align: 0.6em;
+    margin-right: 0.1em;
   }
   .prijzen__toelichting {
-    margin: 0;
+    margin: var(--r-4) 0 0;
+    font-size: var(--tekst-sm);
+    color: var(--kaart-tekst-zacht);
   }
 </style>

@@ -66,6 +66,26 @@ bij `/admin`. Zet beveiliging alleen op previews.
 `npm run dev`, open in Chrome of Edge `http://localhost:4321/admin` → *Work with Local Repository* → kies deze
 map. Wijzigingen komen direct in de bestanden; zelf committen.
 
+## Toegankelijkheid en CSS
+
+De site is gebouwd volgens **WCAG 2.2, niveau AA**, en gecontroleerd met axe-core (wcag2a/aa, 2.1, 2.2 en
+best practices) op 1440 en 320 px: geen meldingen.
+
+- Contrast: witte tekst op de achtergrond 4,95:1, zachte tekst 4,6:1, tekst op de kaarten ≥ 5,5:1,
+  randen van invoervelden 5,5:1. Het patroon maakt de achtergrond alleen donkerder.
+- Toetsenbord: skiplink, een focusring in twee kleuren (geel met donkere rand) die op wit en op petrol
+  zichtbaar is, en `scroll-padding` zodat de focus nooit onder de vaste kop valt (2.4.11).
+- Tikdoelen minimaal 44 × 44 px (2.5.8 vraagt 24). Geen horizontaal scrollen op 320 px (1.4.10).
+- Formulier: zichtbare labels, `autocomplete`, uitleg over verplichte velden vóór het formulier (3.3.2),
+  rode rand pas na een verzendpoging (`:user-invalid`).
+- Houdt rekening met `prefers-reduced-motion`, `prefers-contrast: more` en `forced-colors`.
+
+Moderne CSS: cascade layers (`reset`, `tokens`, `basis`, `hulp`; componentstijlen staan erbuiten en winnen),
+native nesting, container queries (elke `.sectie` is een container), logische eigenschappen
+(`inline-size`, `margin-block`), `text-wrap: balance/pretty`, `field-sizing`, `:user-invalid`,
+`translate` en view transitions tussen pagina's. Doelgroep: browsers van de laatste twee jaar
+(Chrome/Edge 120+, Safari 17.2+, Firefox 117+); oudere browsers tonen de site zonder de extra's.
+
 ## Formulier
 
 Het contactformulier gebruikt **Netlify Forms** (naam `contact`, met een verborgen veld `pagina` en een
@@ -98,7 +118,7 @@ maximaal 2400 px. Vereist Python 3 met PyYAML en Pillow.
 - [ ] **Zoekmachines**: de live Kirby-site staat volledig op `noindex`. Deze site is wél vindbaar. Bevestigen
       dat dat de bedoeling is. Alle pagina's gebruiken nog de omschrijving "Zangstudio Annemiek Maissan";
       per pagina een eigen omschrijving schrijven.
-- [ ] **Alt-teksten** van de foto's zijn leeg; invullen in het CMS ("Omschrijving van de foto").
+- [ ] **Alt-teksten**: de drie grote foto's hebben een korte omschrijving gekregen; laten nakijken door Annemiek.
 - [ ] **DNS-overstap**: de e-mail van info@annemiekmaissan.nl loopt via TransIP. Laat bij het omzetten de
       MX-, SPF- en DKIM-records staan en verander alleen de records voor de website.
 - [ ] Niet overgenomen: de licht/donker-schakelaar, de opvultekst in de footer, en de ongebruikte blokken voor

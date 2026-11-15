@@ -68,7 +68,19 @@ const focus = { boven: "50% 20%", midden: "50% 38%", onder: "50% 65%" }[blok.fot
   }
   .hero__titel {
     font-size: var(--kop-lg);
-    margin-bottom: var(--r-4);
+    line-height: 1.05;
+    margin-block-end: var(--r-6);
+  }
+  .hero__titel::after {
+    content: "";
+    display: block;
+    inline-size: 3rem;
+    block-size: 1px;
+    margin-block-start: var(--r-6);
+    background: var(--lijn);
+  }
+  .hero--midden .hero__titel::after {
+    margin-inline: auto;
   }
   .hero__tekst {
     font-size: var(--tekst-lg);
@@ -103,6 +115,9 @@ const focus = { boven: "50% 20%", midden: "50% 38%", onder: "50% 65%" }[blok.fot
     }
     .hero--groot.hero--midden .hero__titel {
       text-align: left;
+    }
+    .hero--groot.hero--midden .hero__titel::after {
+      margin-inline: 0;
     }
     .hero--groot.hero--rechts .hero__inhoud {
       grid-column: 2;

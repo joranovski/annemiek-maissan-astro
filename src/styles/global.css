@@ -1,164 +1,314 @@
-@import "@fontsource/inter/latin-400.css";
-@import "@fontsource/inter/latin-600.css";
-@import "./tokens.css";
+/* Basisstijl van annemiekmaissan.nl
+   Volgorde van de lagen: reset → tokens → basis → hulpklassen. Componentstijlen (in de .astro-bestanden)
+   staan buiten de lagen en winnen daardoor altijd van de basis, zonder !important. */
+@layer reset, tokens, basis, hulp;
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@import "@fontsource/inter/latin-400.css" layer(basis);
+@import "@fontsource/inter/latin-600.css" layer(basis);
+@import "./tokens.css" layer(tokens);
 
-html {
-  -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--kop-hoogte) + var(--r-4));
-}
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-@media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    color-scheme: light;
+    scroll-behavior: smooth;
+    /* WCAG 2.4.11: wat de focus krijgt, verdwijnt nooit onder de vaste kop */
+    scroll-padding-block-start: calc(var(--kop-hoogte) + var(--r-6));
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  p,
+  figure {
+    margin: 0;
+  }
+
+  img,
+  picture,
+  svg {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  img {
+    block-size: auto;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  margin: 0;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  font-family: var(--font-tekst);
-  font-size: var(--tekst-md);
-  line-height: 1.6;
-  color: var(--tekst);
-  /* Bloemenpatroon van de oude site, zacht over de petrolkleur */
-  background: url("/img/full-bloom.png") repeat center / auto, var(--bg);
-  background-blend-mode: color-burn;
+/* Vloeiende overgang tussen pagina's (alleen waar de browser het kan en beweging gewenst is) */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
 }
 
-main {
-  flex: 1;
+@layer basis {
+  /* De achtergrond staat ook op html: anders schuift de browser hem door naar het canvas
+     en heeft het patroon (color-burn) niets om mee te mengen. */
+  html {
+    background: var(--bg);
+  }
+
+  body {
+    min-block-size: 100svh;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-tekst);
+    font-size: var(--tekst-md);
+    line-height: 1.6;
+    color: var(--tekst);
+    background: var(--bg);
+    isolation: isolate;
+    accent-color: var(--petrol-700);
+  }
+
+  /* Bloemenpatroon van de oude site, zachter dan voorheen zodat het rustiger oogt.
+     Het patroon maakt de achtergrond alleen donkerder, dus het contrast van witte tekst gaat erop vooruit. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: url("/img/full-bloom.png") repeat center / auto;
+    mix-blend-mode: color-burn;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-kop);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin-block-end: var(--r-4);
+  }
+
+  h2 {
+    font-size: var(--kop-md);
+  }
+
+  h3 {
+    font-size: var(--kop-sm);
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  p {
+    margin-block-end: var(--r-4);
+  }
+
+  a {
+    color: inherit;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  /* WCAG 2.4.7 en 1.4.11: een focusring in twee kleuren, zichtbaar op wit én op petrol */
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px var(--focus-rand);
+    border-radius: 4px;
+  }
+
+  .tekst > :last-child {
+    margin-block-end: 0;
+  }
+
+  .tekst ul {
+    padding-inline-start: 1.2em;
+    margin-block-end: var(--r-4);
+  }
+
+  .tekst li + li {
+    margin-block-start: var(--r-1);
+  }
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-kop);
-  font-weight: 400;
-  line-height: 1.15;
-  text-wrap: balance;
-  margin: 0 0 var(--r-4);
-}
+@layer hulp {
+  .container {
+    inline-size: min(100% - 2 * var(--r-6), var(--breed));
+    margin-inline: auto;
+  }
 
-h2 {
-  font-size: var(--kop-md);
-}
+  .container--smal {
+    inline-size: min(100% - 2 * var(--r-6), var(--smal));
+    margin-inline: auto;
+  }
 
-h3 {
-  font-size: var(--kop-sm);
-}
-
-p {
-  margin: 0 0 var(--r-4);
-}
-
-a {
-  color: inherit;
-  text-underline-offset: 0.18em;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 3px;
-}
-
-.container {
-  width: min(100% - 2 * var(--r-6), var(--breed));
-  margin-inline: auto;
-}
-
-.container--smal {
-  width: min(100% - 2 * var(--r-6), var(--smal));
-  margin-inline: auto;
-}
-
-.sectie {
-  padding-block: var(--r-16);
-}
-
-@media (max-width: 40rem) {
+  /* Elke sectie is een container, zodat blokken op hun eigen breedte reageren (container queries) */
   .sectie {
+    container: sectie / inline-size;
     padding-block: var(--r-12);
   }
-}
 
-.tekst > :last-child {
-  margin-bottom: 0;
-}
+  @media (width < 40rem) {
+    .sectie {
+      padding-block: var(--r-8) var(--r-12);
+    }
+  }
 
-.tekst ul {
-  padding-left: 1.2em;
-  margin: 0 0 var(--r-4);
-}
+  /* Kop boven een sectie: gecentreerd, met een fijn lijntje eronder */
+  .sectie__kop {
+    max-inline-size: var(--smal);
+    margin: 0 auto var(--r-8);
+    text-align: center;
 
-.knop {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: var(--r-2) var(--r-6);
-  border: 0;
-  border-radius: var(--hoek-sm);
-  background: var(--knop);
-  color: var(--wit);
-  font: 600 var(--tekst-md) / 1.2 var(--font-tekst);
-  text-decoration: none;
-  cursor: pointer;
-}
+    & h2::after {
+      content: "";
+      display: block;
+      inline-size: 3rem;
+      block-size: 1px;
+      margin: var(--r-4) auto 0;
+      background: var(--lijn);
+    }
 
-.knop:hover {
-  background: var(--knop-hover);
-}
+    & .tekst,
+    & > p {
+      color: var(--tekst-zacht);
+      font-size: var(--tekst-lg);
+      line-height: 1.55;
+    }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
+    @media (width < 40rem) {
+      & .tekst,
+      & > p {
+        font-size: var(--tekst-md);
+      }
+    }
+  }
 
-.skiplink {
-  position: absolute;
-  left: var(--r-4);
-  top: -4rem;
-  z-index: 100;
-  padding: var(--r-2) var(--r-4);
-  background: var(--wit);
-  color: var(--petrol-800);
-  border-radius: var(--hoek-sm);
-}
+  /* Paneel: dezelfde zachte, donkere laag voor lijsten, tekstblokken en het formulier */
+  .paneel {
+    background: var(--paneel);
+    border: 1px solid var(--paneel-rand);
+    border-radius: var(--hoek-lg);
+  }
 
-.skiplink:focus {
-  top: var(--r-2);
-}
+  .knop {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--r-2);
+    min-block-size: 44px;
+    padding: var(--r-2) var(--r-6);
+    border: 1px solid transparent;
+    border-radius: var(--hoek-pil);
+    background: var(--knop);
+    color: var(--wit);
+    font: 600 var(--tekst-md) / 1.2 var(--font-tekst);
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 
-/* "In beeld"-animatie: alleen met JS en zonder reduced motion (de wachtstand zet het script) */
-.js-wacht {
-  opacity: 0;
-  transform: translateY(16px);
-}
+    &:hover {
+      background: var(--knop-hover);
+    }
+  }
 
-.js-in-beeld {
-  opacity: 1;
-  transform: none;
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  .sr-only {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .skiplink {
+    position: absolute;
+    inset-inline-start: var(--r-4);
+    inset-block-start: -4rem;
+    z-index: 100;
+    padding: var(--r-2) var(--r-4);
+    background: var(--wit);
+    color: var(--petrol-800);
+    border-radius: var(--hoek-sm);
+
+    &:focus {
+      inset-block-start: var(--r-2);
+    }
+  }
+
+  /* "In beeld"-animatie: de wachtstand zet het script, alleen met JS en zonder reduced motion */
+  .js-wacht {
+    opacity: 0;
+    translate: 0 16px;
+  }
+
+  .js-in-beeld {
+    opacity: 1;
+    translate: none;
+    transition:
+      opacity 0.6s ease,
+      translate 0.6s ease;
+  }
+
+  /* Meer contrast gevraagd: geen doorschijnende lagen en geen patroon */
+  @media (prefers-contrast: more) {
+    body::before {
+      display: none;
+    }
+    .paneel {
+      background: var(--petrol-900);
+      border-color: var(--wit);
+    }
+  }
+
+  /* Windows-modus met hoog contrast: randen en focus in systeemkleuren */
+  @media (forced-colors: active) {
+    .paneel,
+    .knop {
+      border: 1px solid CanvasText;
+    }
+    :focus-visible {
+      outline-color: Highlight;
+    }
+  }
 }

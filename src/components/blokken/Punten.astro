@@ -12,7 +12,7 @@ const { blok } = Astro.props;
   <div class="container">
     {
       (blok.kop || blok.intro) && (
-        <header class="punten__kop">
+        <header class="sectie__kop">
           {blok.kop && <h2>{blok.kop}</h2>}
           {blok.intro && <div class="tekst" set:html={md(blok.intro)} />}
         </header>
@@ -22,7 +22,7 @@ const { blok } = Astro.props;
       blok.punten.length > 0 && (
         <ul class="punten__lijst">
           {blok.punten.map((p) => (
-            <li class="punten__item">
+            <li class="punten__item paneel">
               <Icon naam="vinkje" class="punten__vinkje" />
               <span set:html={md(p, true)} />
             </li>
@@ -35,22 +35,19 @@ const { blok } = Astro.props;
 </section>
 
 <style>
-  .punten__kop,
+  .punten .container {
+    max-width: 60rem;
+  }
   .punten__afsluiting {
     max-width: var(--smal);
-    margin-inline: auto;
+    margin: var(--r-8) auto 0;
     text-align: center;
-  }
-  .punten__kop {
-    margin-bottom: var(--r-8);
-  }
-  .punten__afsluiting {
-    margin-top: var(--r-8);
+    color: var(--tekst-zacht);
   }
   .punten__lijst {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-    gap: var(--r-4);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    gap: var(--r-3);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -59,14 +56,14 @@ const { blok } = Astro.props;
     display: flex;
     align-items: center;
     gap: var(--r-4);
-    padding: var(--r-4) var(--r-6);
-    border-radius: 2rem;
-    background: var(--paneel);
+    padding: var(--r-4) var(--r-6) var(--r-4) var(--r-4);
+    border-radius: 1.75rem;
+    line-height: 1.45;
     --vinkje: var(--petrol-800);
   }
   .punten__item :global(.punten__vinkje) {
-    width: 1.5rem;
-    height: 1.5rem;
-    color: var(--wit);
+    width: 1.375rem;
+    height: 1.375rem;
+    color: var(--petrol-100);
   }
 </style>

@@ -11,7 +11,7 @@ const { blok } = Astro.props;
 <section class:list={["sectie", "tekstblok", { "tekstblok--foto": blok.foto }]} data-in-beeld>
   <div class:list={["container", { "container--smal": !blok.foto }, "tekstblok__raster"]}>
     {blok.foto && <Foto src={blok.foto} alt={blok.fotoAlt ?? ""} widths={[480, 960]} sizes="(min-width: 48rem) 50vw, 100vw" class="tekstblok__foto" />}
-    <div class="tekstblok__paneel">
+    <div class="tekstblok__paneel paneel">
       {blok.kop && <h2>{blok.kop}</h2>}
       {blok.tekst && <div class="tekst" set:html={md(blok.tekst)} />}
       {
@@ -39,12 +39,18 @@ const { blok } = Astro.props;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
   }
   .tekstblok__paneel {
-    padding: var(--r-8);
-    border-radius: var(--hoek-md);
-    background: var(--paneel);
+    padding: var(--r-8) var(--r-8) var(--r-8);
+  }
+  .tekstblok__paneel h2::after {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 1px;
+    margin-top: var(--r-4);
+    background: var(--lijn);
   }
   .tekstblok :global(img.tekstblok__foto) {
-    border-radius: var(--hoek-md);
+    border-radius: var(--hoek-lg);
     box-shadow: var(--schaduw);
   }
   .tekstblok__knoppen {

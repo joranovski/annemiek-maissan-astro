@@ -14,22 +14,23 @@ const id = `contact-${pagina}`;
 
 <section class="sectie formulier" data-in-beeld id="contact">
   <div class="container container--smal">
-    <div class="formulier__paneel">
-      <h2>{blok.kop || formulier.kop}</h2>
+    <div class="formulier__paneel paneel">
+      <h2 class="formulier__titel">{blok.kop || formulier.kop}</h2>
       {blok.intro && <div class="tekst" set:html={md(blok.intro)} />}
-      <form name="contact" method="POST" action="/bedankt" data-netlify="true" netlify-honeypot="bot-veld">
+      <form name="contact" aria-describedby={`${id}-uitleg`} method="POST" action="/bedankt" data-netlify="true" netlify-honeypot="bot-veld">
         <input type="hidden" name="form-name" value="contact" />
         <input type="hidden" name="pagina" value={pagina} />
         <p class="formulier__bot" aria-hidden="true">
           <label>Niet invullen: <input name="bot-veld" tabindex="-1" autocomplete="off" /></label>
         </p>
+        <p class="formulier__uitleg" id={`${id}-uitleg`}>Velden met <span aria-hidden="true">*</span> zijn verplicht.</p>
         <div class="formulier__raster">
           <p class="veld">
-            <label for={`${id}-naam`}>Naam <span aria-hidden="true">*</span></label>
+            <label for={`${id}-naam`}>Naam <span aria-hidden="true">*</span><span class="sr-only">(verplicht)</span></label>
             <input id={`${id}-naam`} name="naam" type="text" autocomplete="name" required />
           </p>
           <p class="veld">
-            <label for={`${id}-email`}>E-mailadres <span aria-hidden="true">*</span></label>
+            <label for={`${id}-email`}>E-mailadres <span aria-hidden="true">*</span><span class="sr-only">(verplicht)</span></label>
             <input id={`${id}-email`} name="email" type="email" autocomplete="email" required />
           </p>
           <p class="veld veld--breed">
@@ -46,7 +47,6 @@ const id = `contact-${pagina}`;
         </div>
         <p class="formulier__voet">
           <button class="knop knop--licht" type="submit">{formulier.knop}</button>
-          <span class="formulier__verplicht">* verplicht</span>
         </p>
       </form>
     </div>
@@ -55,10 +55,21 @@ const id = `contact-${pagina}`;
 
 <style>
   .formulier__paneel {
-    padding: var(--r-8);
-    border-radius: var(--hoek-md);
+    padding: var(--r-12) var(--r-12) var(--r-8);
     background: var(--paneel-vast);
     box-shadow: var(--schaduw);
+  }
+  .formulier__titel {
+    text-align: center;
+    margin-bottom: var(--r-8);
+  }
+  .formulier__titel::after {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 1px;
+    margin: var(--r-4) auto 0;
+    background: var(--lijn);
   }
   .formulier__raster {
     display: grid;
@@ -76,6 +87,8 @@ const id = `contact-${pagina}`;
   label {
     font-weight: 600;
     font-size: var(--tekst-sm);
+    letter-spacing: 0.01em;
+    color: var(--tekst-zacht);
   }
   input,
   select,
@@ -84,13 +97,32 @@ const id = `contact-${pagina}`;
     min-height: 44px;
     padding: var(--r-2) var(--r-3);
     border: 1px solid var(--veld-rand);
-    border-radius: var(--hoek-sm);
-    background: var(--veld-bg);
+    border-radius: 10px;
+    background: var(--wit);
     color: var(--kaart-tekst);
     font: inherit;
   }
   textarea {
     resize: vertical;
+    min-block-size: 8rem;
+    field-sizing: content;
+  }
+  .formulier__uitleg {
+    font-size: var(--tekst-sm);
+    color: var(--tekst-zacht);
+    margin-block-end: var(--r-4);
+  }
+  /* Pas na een poging tot versturen een rode rand bij ongeldige velden */
+  input:user-invalid {
+    border-color: var(--framboos-600);
+    box-shadow: 0 0 0 1px var(--framboos-600);
+  }
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 1px;
+    border-color: var(--petrol-700);
   }
   .formulier__bot {
     position: absolute;
@@ -99,8 +131,12 @@ const id = `contact-${pagina}`;
   .formulier__voet {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: var(--r-4);
-    margin: var(--r-2) 0 0;
+    margin: var(--r-4) 0 0;
+  }
+  .formulier__voet .knop {
+    min-inline-size: 10rem;
   }
   .knop--licht {
     background: var(--wit);
@@ -109,13 +145,9 @@ const id = `contact-${pagina}`;
   .knop--licht:hover {
     background: var(--petrol-100);
   }
-  .formulier__verplicht {
-    font-size: var(--tekst-sm);
-    color: var(--tekst-zacht);
-  }
   @media (max-width: 40rem) {
     .formulier__paneel {
-      padding: var(--r-6);
+      padding: var(--r-8) var(--r-6) var(--r-6);
     }
   }
 </style>

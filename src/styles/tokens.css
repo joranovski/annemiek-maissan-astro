@@ -39,8 +39,10 @@
   /* Rollen */
   --bg: var(--petrol-600);
   --tekst: var(--wit);
-  --tekst-zacht: hsl(186 30% 92%);
-  --paneel: hsl(186 100% 8% / 0.42);
+  --tekst-zacht: hsl(186 40% 96%); /* ≥ 4,5:1 op de achtergrond, ook zonder patroon */
+  --paneel: hsl(186 100% 7% / 0.3);
+  --paneel-rand: hsl(0 0% 100% / 0.14);
+  --lijn: hsl(186 60% 80% / 0.5);
   --paneel-vast: var(--petrol-800);
   --kaart: var(--wit);
   --kaart-tekst: var(--grijs-800);
@@ -52,6 +54,7 @@
   --knop-hover: var(--petrol-950);
   --accent: var(--framboos-500);
   --focus: hsl(48 100% 60%);
+  --focus-rand: var(--zwart);
   --veld-bg: var(--grijs-50);
   --veld-rand: var(--grijs-500);
 
@@ -78,9 +81,10 @@
 
   /* Vorm */
   --hoek-sm: 6px;
-  --hoek-md: 12px;
+  --hoek-md: 14px;
+  --hoek-lg: 20px;
   --hoek-pil: 999px;
-  --schaduw: 0 1px 2px hsl(186 100% 5% / 0.15), 0 8px 24px hsl(186 100% 5% / 0.22);
+  --schaduw: 0 1px 2px hsl(186 100% 5% / 0.12), 0 12px 32px -8px hsl(186 100% 5% / 0.35);
 
   --breed: 72rem;
   --smal: 46rem;

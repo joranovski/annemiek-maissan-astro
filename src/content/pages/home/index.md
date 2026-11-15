@@ -7,6 +7,7 @@ blocks:
   titel: Welkom bij Zangstudio Annemiek Maissan
   tekst: 'Zangstudio Annemiek Maissan is al meer dan 25 jaar een begrip in Amersfoort en omstreken. Annemiek heeft in die tijd talloze zangers gecoacht en met hen concerten verzorgd in theaters, tuinen, kerken en huiskamers. Nu is het tijd voor een nieuwe fase: Bij Zangstudio Annemiek Maissan kun je terecht voor doelgerichte zanglessen. Geen langdurig contract waar je een heel seizoen aan vastzit, maar op maat gemaakte afspraken voor één, twee of meer lessen.'
   foto: annemiekmaissan-5-van-7.jpg
+  fotoAlt: Portret van Annemiek Maissan
   uitlijning: midden
 - type: punten
   kop: Wat kun je verwachten?

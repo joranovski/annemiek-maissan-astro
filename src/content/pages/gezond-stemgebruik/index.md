@@ -5,6 +5,7 @@ listed: true
 blocks:
 - type: hero
   foto: annemiekmaissan-4.jpg
+  fotoAlt: Annemiek Maissan presenteert achter een microfoon
   uitlijning: links
 - type: tekst
   kop: Hoe gebruik je je stem bij spreken?

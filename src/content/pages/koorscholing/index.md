@@ -5,6 +5,7 @@ listed: true
 blocks:
 - type: hero
   foto: annemiekmaissan-10.jpg
+  fotoAlt: Annemiek Maissan zingt
   uitlijning: midden
 - type: punten
   kop: Koorscholing en stemvorming

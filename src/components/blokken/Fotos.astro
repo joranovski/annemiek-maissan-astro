@@ -10,7 +10,7 @@ const { blok } = Astro.props;
 
 <section class="sectie fotos" data-in-beeld>
   <div class="container">
-    {blok.kop && <h2 class="fotos__kop">{blok.kop}</h2>}
+    {blok.kop && <header class="sectie__kop"><h2>{blok.kop}</h2></header>}
     <div class="fotos__raster">
       {
         blok.fotos.map((f) => (
@@ -25,9 +25,6 @@ const { blok } = Astro.props;
 </section>
 
 <style>
-  .fotos__kop {
-    text-align: center;
-  }
   .fotos__raster {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
@@ -40,7 +37,7 @@ const { blok } = Astro.props;
     width: 100%;
     aspect-ratio: 3 / 2;
     object-fit: cover;
-    border-radius: var(--hoek-md);
+    border-radius: var(--hoek-lg);
     box-shadow: var(--schaduw);
   }
   figcaption {
