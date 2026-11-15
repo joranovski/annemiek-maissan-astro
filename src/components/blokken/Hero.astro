@@ -1,132 +1,205 @@
 ---
 import Foto from "../Foto.astro";
+import Golf from "../Golf.astro";
 import { md, type Blok } from "../../lib/content";
 
 interface Props {
   blok: Extract<Blok, { type: "hero" }>;
   eerste: boolean;
+  paginaTitel: string;
 }
-const { blok, eerste } = Astro.props;
-const heeftTekst = Boolean(blok.titel || blok.tekst);
+const { blok, eerste, paginaTitel } = Astro.props;
+// Met eigen titel of tekst: een welkomstblok met foto in boogvorm. Zonder: een paginakop met brede foto.
+const welkom = Boolean(blok.titel || blok.tekst);
 const Kop = eerste ? "h1" : "h2";
 // Welk deel van de foto zichtbaar blijft als hij wordt bijgesneden
 const focus = { boven: "50% 20%", midden: "50% 38%", onder: "50% 65%" }[blok.fotoFocus];
 ---
 
-<section style={`--focus: ${focus}`} class:list={["hero", `hero--${blok.uitlijning}`, { "hero--groot": heeftTekst, "hero--zonder-foto": !blok.foto }]}>
-  {
-    blok.foto && (
-      <Foto src={blok.foto} alt={blok.fotoAlt ?? ""} widths={[640, 1280, 1920]} sizes={heeftTekst ? "(min-width: 60rem) 55vw, 100vw" : "100vw"} boven={eerste} class="hero__foto" />
-    )
-  }
-  {
-    heeftTekst && (
-      <div class="container hero__inhoud">
-        {blok.titel && <Kop class="hero__titel" set:html={md(blok.titel, true)} />}
-        {blok.tekst && <div class="hero__tekst tekst" set:html={md(blok.tekst)} />}
+{
+  welkom ? (
+    <section class:list={["hero", "hero--welkom", "toon-donker", `hero--${blok.uitlijning}`]} style={`--focus: ${focus}`}>
+      <div class="container hero__raster">
+        <div class="hero__inhoud">
+          {blok.label && <span class="label">{blok.label}</span>}
+          {blok.titel && <Kop class="hero__titel" set:html={md(blok.titel, true)} />}
+          {blok.tekst && <div class="hero__tekst tekst" set:html={md(blok.tekst)} />}
+          {blok.knoppen.length > 0 && (
+            <p class="hero__knoppen">
+              {blok.knoppen.map((k, i) => (
+                <a class:list={["knop", i === 0 ? "knop--licht" : "knop--rand"]} href={k.link}>
+                  {k.label}
+                </a>
+              ))}
+            </p>
+          )}
+        </div>
+        {blok.foto && (
+          <div class="hero__boog">
+            <Foto src={blok.foto} alt={blok.fotoAlt ?? ""} widths={[480, 800, 1200]} sizes="(min-width: 60rem) 40vw, 90vw" boven={eerste} class="hero__foto" />
+          </div>
+        )}
       </div>
-    )
-  }
-</section>
+      <Golf class="hero__golf" />
+    </section>
+  ) : (
+    <section class="hero hero--kop toon-donker" style={`--focus: ${focus}`}>
+      <div class="container">
+        {blok.label && <span class="label">{blok.label}</span>}
+        <Kop class="hero__titel">{paginaTitel}</Kop>
+        {blok.foto && (
+          <div class="hero__breed">
+            <Foto src={blok.foto} alt={blok.fotoAlt ?? ""} widths={[640, 1280, 1920]} sizes="(min-width: 76rem) 72rem, 100vw" boven={eerste} class="hero__foto" />
+          </div>
+        )}
+      </div>
+      <Golf class="hero__golf" />
+    </section>
+  )
+}
 
 <style>
-  /* Zonder tekst: een fotobanner. Met tekst: foto en tekst naast elkaar (desktop) of onder elkaar
-     (telefoon), zodat de tekst nooit over het gezicht op de foto valt. */
   .hero {
     position: relative;
-    overflow: hidden;
+    overflow: clip;
+    background: var(--paneel-vast);
+    padding-block: var(--r-16) var(--r-24);
   }
+
   .hero :global(img.hero__foto) {
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     object-fit: cover;
     object-position: var(--focus);
   }
-  .hero:not(.hero--groot) {
-    height: clamp(14rem, 45svh, 28rem);
-  }
-  .hero:not(.hero--groot) :global(.hero__foto),
-  .hero:not(.hero--groot) :global(img.hero__foto) {
-    position: absolute;
-    inset: 0;
-  }
-  .hero--zonder-foto {
-    height: auto !important;
-  }
 
-  .hero--groot {
-    display: grid;
-    grid-template-columns: 1fr;
-    background: var(--paneel-vast);
-  }
-  .hero--groot :global(.hero__foto) {
-    display: block;
-    aspect-ratio: 4 / 3;
-  }
-  .hero__inhoud {
-    padding-block: var(--r-8) var(--r-12);
-  }
   .hero__titel {
-    font-size: var(--kop-lg);
-    line-height: 1.05;
+    font-size: var(--kop-xl);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
     margin-block-end: var(--r-6);
   }
-  .hero__titel::after {
-    content: "";
-    display: block;
-    inline-size: 3rem;
-    block-size: 1px;
-    margin-block-start: var(--r-6);
-    background: var(--lijn);
-  }
-  .hero--midden .hero__titel::after {
-    margin-inline: auto;
-  }
+
   .hero__tekst {
     font-size: var(--tekst-lg);
-    line-height: 1.6;
+    line-height: 1.65;
     color: var(--tekst-zacht);
-  }
-  .hero--midden .hero__titel {
-    text-align: center;
+    max-inline-size: 36rem;
   }
 
-  @media (min-width: 60rem) {
-    .hero--groot {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-      min-height: min(calc(100svh - var(--kop-hoogte)), 46rem);
+  .hero__knoppen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--r-3);
+    margin-block-start: var(--r-8);
+  }
+
+  /* Welkomstblok: tekst links, foto in een boog rechts (de boog verwijst naar de organische vormen van de oude site) */
+  .hero__raster {
+    display: grid;
+    gap: var(--r-12);
+    align-items: center;
+  }
+
+  .hero__boog {
+    position: relative;
+    inline-size: min(100%, 30rem);
+    aspect-ratio: 4 / 5;
+    justify-self: center;
+    border-radius: 999px 999px var(--hoek-lg) var(--hoek-lg);
+
+    & :global(picture),
+    & :global(img.hero__foto) {
+      display: block;
+      block-size: 100%;
+      border-radius: inherit;
     }
-    .hero--groot :global(.hero__foto) {
-      grid-column: 2;
-      grid-row: 1;
-      aspect-ratio: auto;
-      height: 100%;
-    }
-    .hero--groot.hero--rechts :global(.hero__foto) {
-      grid-column: 1;
-    }
-    .hero--groot .hero__inhoud {
-      grid-row: 1;
-      align-self: center;
-      width: auto;
-      max-width: 34rem;
-      margin: 0 var(--r-12) 0 max(var(--r-6), (100vw - var(--breed)) / 2);
-      padding-block: var(--r-16);
-    }
-    .hero--groot.hero--midden .hero__titel {
-      text-align: left;
-    }
-    .hero--groot.hero--midden .hero__titel::after {
-      margin-inline: 0;
-    }
-    .hero--groot.hero--rechts .hero__inhoud {
-      grid-column: 2;
-      margin: 0 max(var(--r-6), (100vw - var(--breed)) / 2) 0 var(--r-12);
+
+    /* Een tweede, lege boog iets verschoven erachter */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      translate: 1.25rem 1.25rem;
+      border: 1px solid var(--lijn);
+      border-radius: inherit;
+      z-index: -1;
     }
   }
-  @media (max-width: 40rem) {
+
+  .hero__raster {
+    isolation: isolate;
+  }
+
+  @media (width >= 60rem) {
+    .hero--welkom {
+      padding-block: var(--r-16) var(--r-24);
+    }
+    .hero__raster {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: var(--r-16);
+    }
+    .hero--rechts .hero__boog {
+      order: -1;
+    }
+    .hero__boog {
+      justify-self: end;
+    }
+  }
+
+  @media (width < 60rem) {
+    .hero--welkom .hero__boog {
+      order: -1;
+      inline-size: min(78%, 22rem);
+    }
+    .hero--midden .hero__inhoud {
+      text-align: center;
+    }
+    .hero--midden .hero__knoppen {
+      justify-content: center;
+    }
+    .hero--midden .hero__tekst {
+      margin-inline: auto;
+      text-align: left;
+    }
+  }
+
+  /* Paginakop: grote titel en een brede foto met ronde hoeken */
+  .hero--kop {
+    padding-block: var(--r-12) var(--r-24);
+
+    & .hero__titel {
+      margin-block-end: var(--r-8);
+    }
+  }
+
+  .hero__breed {
+    aspect-ratio: 21 / 8;
+    border-radius: var(--hoek-lg);
+    overflow: clip;
+    box-shadow: var(--schaduw);
+
+    & :global(picture) {
+      display: block;
+      block-size: 100%;
+    }
+  }
+
+  @media (width < 40rem) {
+    .hero__breed {
+      aspect-ratio: 4 / 3;
+    }
     .hero__tekst {
       font-size: var(--tekst-md);
     }
+    .hero {
+      padding-block: var(--r-8) var(--r-16);
+    }
+  }
+
+  .hero :global(.hero__golf) {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: var(--r-6);
   }
 </style>

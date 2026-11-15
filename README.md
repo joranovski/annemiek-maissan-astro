@@ -16,6 +16,7 @@ Annemiek zelf teksten, prijzen en foto's kan aanpassen. Opvolger van de Kirby 4-
 | Keuzes en teksten van het contactformulier | `src/data/formulier.json` |
 | Kleuren, letters, ruimte | `src/styles/tokens.css` (overzicht op `/designsystem`) |
 | Bloktypes | `src/components/blokken/` (Hero, Punten, Tekst, Fotos, Prijzen, Formulier) |
+| Licht/donker-ritme van de secties | `src/components/Blokken.astro` en `.toon-licht`/`.toon-donker` in `global.css` |
 | Kop, voet, iconen, foto's | `src/components/` |
 | Paginasjabloon, SEO, JSON-LD | `src/layouts/Basis.astro` |
 | Contentschema | `src/content.config.ts` |
@@ -113,6 +114,9 @@ maximaal 2400 px. Vereist Python 3 met PyYAML en Pillow.
       goed stemgebruik bij vergaderingen en presentaties". Komen mee met de backup.
 - [ ] **Home**: de tekst "Het doel is om in een korte periode gericht te werken…" stond in Kirby, maar werd door
       een fout in het oude sjabloon nooit getoond. Nu staat hij er wel: nog bevestigen met Annemiek.
+- [ ] **Nog bevestigen**: de kleine woorden boven de koppen ("Zangstudio in Amersfoort", "Zanglessen op maat",
+      "Ervaring", "Tarieven", "Contact", "Goed om te weten", "Spreken en presenteren", "Workshop", "Voor koren",
+      "Aanbod") en de knoppen "Plan een proefles", "Bekijk de tarieven" en "Proefles plannen" zijn nieuw.
 - [ ] **Nog bevestigen**: de tekst op de bedankpagina ("Annemiek neemt zo snel mogelijk contact met je op.")
       is nieuw geschreven.
 - [ ] **Zoekmachines**: de live Kirby-site staat volledig op `noindex`. Deze site is wél vindbaar. Bevestigen

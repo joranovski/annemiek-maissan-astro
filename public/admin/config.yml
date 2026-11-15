@@ -76,6 +76,11 @@ collections:
             widget: object
             summary: "{{titel}}"
             fields:
+              - name: label
+                label: Klein woord boven de kop
+                widget: string
+                required: false
+                hint: Bijvoorbeeld "Tarieven" of "Contact". Mag leeg blijven.
               - name: titel
                 label: Titel
                 widget: string
@@ -114,12 +119,34 @@ collections:
                   - { label: Links, value: links }
                   - { label: Gecentreerd, value: midden }
                   - { label: Rechts (foto links), value: rechts }
+              - name: knoppen
+                label: Knoppen
+                label_singular: Knop
+                widget: list
+                required: false
+                fields:
+                  - { name: label, label: Tekst op de knop, widget: string }
+                  - { name: link, label: Link, widget: string, hint: "Bijvoorbeeld #contact, #tarieven of /koorscholing" }
 
           - name: punten
             label: Lijst met vinkjes
             widget: object
             summary: "{{kop}}"
             fields:
+              - name: label
+                label: Klein woord boven de kop
+                widget: string
+                required: false
+                hint: Bijvoorbeeld "Tarieven" of "Contact". Mag leeg blijven.
+              - name: toon
+                label: Kleur van dit blok
+                widget: select
+                default: auto
+                required: false
+                options:
+                  - { label: Automatisch (afwisselend licht en donker), value: auto }
+                  - { label: Licht, value: licht }
+                  - { label: Donker, value: donker }
               - name: kop
                 label: Kop
                 widget: string
@@ -151,6 +178,20 @@ collections:
             widget: object
             summary: "{{kop}}"
             fields:
+              - name: label
+                label: Klein woord boven de kop
+                widget: string
+                required: false
+                hint: Bijvoorbeeld "Tarieven" of "Contact". Mag leeg blijven.
+              - name: toon
+                label: Kleur van dit blok
+                widget: select
+                default: auto
+                required: false
+                options:
+                  - { label: Automatisch (afwisselend licht en donker), value: auto }
+                  - { label: Licht, value: licht }
+                  - { label: Donker, value: donker }
               - name: kop
                 label: Kop
                 widget: string
@@ -183,6 +224,20 @@ collections:
             widget: object
             summary: "{{kop}}"
             fields:
+              - name: label
+                label: Klein woord boven de kop
+                widget: string
+                required: false
+                hint: Bijvoorbeeld "Tarieven" of "Contact". Mag leeg blijven.
+              - name: toon
+                label: Kleur van dit blok
+                widget: select
+                default: auto
+                required: false
+                options:
+                  - { label: Automatisch (afwisselend licht en donker), value: auto }
+                  - { label: Licht, value: licht }
+                  - { label: Donker, value: donker }
               - name: kop
                 label: Kop
                 widget: string
@@ -202,6 +257,20 @@ collections:
             widget: object
             summary: "{{kop}}"
             fields:
+              - name: label
+                label: Klein woord boven de kop
+                widget: string
+                required: false
+                hint: Bijvoorbeeld "Tarieven" of "Contact". Mag leeg blijven.
+              - name: toon
+                label: Kleur van dit blok
+                widget: select
+                default: auto
+                required: false
+                options:
+                  - { label: Automatisch (afwisselend licht en donker), value: auto }
+                  - { label: Licht, value: licht }
+                  - { label: Donker, value: donker }
               - name: kop
                 label: Kop
                 widget: string
@@ -228,6 +297,20 @@ collections:
             widget: object
             summary: "{{kop}}"
             fields:
+              - name: label
+                label: Klein woord boven de kop
+                widget: string
+                required: false
+                hint: Bijvoorbeeld "Tarieven" of "Contact". Mag leeg blijven.
+              - name: toon
+                label: Kleur van dit blok
+                widget: select
+                default: auto
+                required: false
+                options:
+                  - { label: Automatisch (afwisselend licht en donker), value: auto }
+                  - { label: Licht, value: licht }
+                  - { label: Donker, value: donker }
               - name: kop
                 label: Kop
                 widget: string

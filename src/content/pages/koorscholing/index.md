@@ -7,6 +7,7 @@ blocks:
   foto: annemiekmaissan-10.jpg
   fotoAlt: Annemiek Maissan zingt
   uitlijning: midden
+  label: Voor koren
 - type: punten
   kop: Koorscholing en stemvorming
   intro: |-
@@ -19,6 +20,7 @@ blocks:
   - Horen van en luisteren naar andere stemgroepen om zodoende de koorklank te verbeteren
   - Ademhaling en Ademsteun
   - Het werken aan problemen aan de hand van het eigen repertoire
+  label: Aanbod
 - type: tekst
   kop: Koren die van mij stemvorming / koorscholing kregen
   tekst: |-
@@ -27,4 +29,5 @@ blocks:
     - Margootje uit Amersfoort
     - Smartofore Amersfoort
     - Chorusline uit Soest
+  label: Ervaring
 ---

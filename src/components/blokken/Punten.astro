@@ -4,15 +4,17 @@ import { md, type Blok } from "../../lib/content";
 
 interface Props {
   blok: Extract<Blok, { type: "punten" }>;
+  toon: "licht" | "donker";
 }
-const { blok } = Astro.props;
+const { blok, toon } = Astro.props;
 ---
 
-<section class="sectie punten" data-in-beeld>
+<section class:list={["sectie", "punten", `toon-${toon}`]} data-in-beeld>
   <div class="container">
     {
-      (blok.kop || blok.intro) && (
+      (blok.kop || blok.intro || blok.label) && (
         <header class="sectie__kop">
+          {blok.label && <span class="label">{blok.label}</span>}
           {blok.kop && <h2>{blok.kop}</h2>}
           {blok.intro && <div class="tekst" set:html={md(blok.intro)} />}
         </header>
@@ -22,7 +24,7 @@ const { blok } = Astro.props;
       blok.punten.length > 0 && (
         <ul class="punten__lijst">
           {blok.punten.map((p) => (
-            <li class="punten__item paneel">
+            <li class="punten__item">
               <Icon naam="vinkje" class="punten__vinkje" />
               <span set:html={md(p, true)} />
             </li>
@@ -36,34 +38,59 @@ const { blok } = Astro.props;
 
 <style>
   .punten .container {
-    max-width: 60rem;
+    max-inline-size: 62rem;
   }
-  .punten__afsluiting {
-    max-width: var(--smal);
-    margin: var(--r-8) auto 0;
-    text-align: center;
-    color: var(--tekst-zacht);
-  }
+
   .punten__lijst {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
-    gap: var(--r-3);
+    gap: var(--r-3) var(--r-6);
     margin: 0;
     padding: 0;
     list-style: none;
   }
+
+  /* Twee kolommen zodra de sectie breed genoeg is (container query) */
+  @container sectie (width > 44rem) {
+    .punten__lijst {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   .punten__item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--r-4);
-    padding: var(--r-4) var(--r-6) var(--r-4) var(--r-4);
-    border-radius: 1.75rem;
-    line-height: 1.45;
-    --vinkje: var(--petrol-800);
+    padding: var(--r-5, 1.25rem) var(--r-6);
+    border-radius: var(--hoek-lg);
+    background: var(--paneel);
+    border: 1px solid var(--paneel-rand);
+    line-height: 1.5;
   }
+
+  /* Licht: een rustige lijst met lijntjes in plaats van kaartjes */
+  .toon-licht .punten__item {
+    background: none;
+    border: 0;
+    border-block-end: 1px solid var(--paneel-rand);
+    border-radius: 0;
+    padding-inline: 0;
+  }
+
   .punten__item :global(.punten__vinkje) {
-    width: 1.375rem;
-    height: 1.375rem;
-    color: var(--petrol-100);
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    margin-block-start: 0.05rem;
+    color: var(--vinkje-rond, var(--petrol-100));
+    --vinkje: var(--vinkje-teken, var(--petrol-800));
+  }
+
+  .punten__afsluiting {
+    max-inline-size: 40rem;
+    margin: var(--r-12) auto 0;
+    text-align: center;
+    font-family: var(--font-kop);
+    font-size: var(--kop-sm);
+    line-height: 1.35;
+    color: var(--tekst);
   }
 </style>

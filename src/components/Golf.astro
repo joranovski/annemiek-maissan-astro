@@ -1,0 +1,29 @@
+---
+// Versiering: een rustige geluidsgolf, als knipoog naar de stem. Puur decoratief.
+interface Props {
+  class?: string;
+}
+const { class: klasse } = Astro.props;
+// Een golf waarvan de uitslag aanzwelt en weer afneemt, zoals een gezongen toon
+const punten: string[] = [];
+for (let x = 0; x <= 1200; x += 6) {
+  const omhulling = Math.sin((x / 1200) * Math.PI) ** 2;
+  const y = 24 + Math.sin(x / 18) * 14 * omhulling;
+  punten.push(`${x},${y.toFixed(1)}`);
+}
+---
+
+<svg class:list={["golf", klasse]} viewBox="0 0 1200 48" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <polyline points={punten.join(" ")} fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke" />
+</svg>
+
+<style>
+  .golf {
+    display: block;
+    inline-size: 100%;
+    block-size: 3rem;
+    color: var(--lijn);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+</style>

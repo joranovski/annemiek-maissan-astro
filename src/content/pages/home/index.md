@@ -9,6 +9,12 @@ blocks:
   foto: annemiekmaissan-5-van-7.jpg
   fotoAlt: Portret van Annemiek Maissan
   uitlijning: midden
+  label: Zangstudio in Amersfoort
+  knoppen:
+  - label: Plan een proefles
+    link: '#contact'
+  - label: Bekijk de tarieven
+    link: '#tarieven'
 - type: punten
   kop: Wat kun je verwachten?
   intro: 'Bij Annemiek kun je terecht voor individuele zanglessen, volledig afgestemd op jouw wensen en doelen. Denk hierbij aan:'
@@ -19,6 +25,7 @@ blocks:
   - Het werken aan repertoire voor een bijzonder optreden.
   - Persoonlijke begeleiding bij elk ander zangdoel dat je wilt bereiken.
   afsluiting: Het doel is om in een korte periode gericht te werken aan hetgeen jij nodig hebt, zonder langdurige verplichtingen.
+  label: Zanglessen op maat
 - type: punten
   kop: Expertise van Annemiek
   intro: 'Met haar jarenlange ervaring biedt Annemiek hulp op diverse gebieden, zoals:'
@@ -29,6 +36,7 @@ blocks:
   - Het herkennen en oplossen van zangproblemen.
   - Het aanpakken van heesheid na het zingen.
   - Zangers die vastgelopen zijn weer op weg helpen.
+  label: Ervaring
 - type: prijzen
   kop: Praktische informatie
   subkop: Maak je keuze
@@ -48,12 +56,15 @@ blocks:
     prijs: 250 / 275
     toelichting: Strippenkaarten zijn een half jaar geldig
     populair: false
+  label: Tarieven
 - type: formulier
   kop: Contactformulier
+  label: Contact
 - type: punten
   kop: Afspraken en voorwaarden
   punten:
   - De lestijd is inclusief binnenkomen, afspraken maken en repertoire uitzoeken.
   - Bij verhindering kun je kosteloos minimaal 24 uur van tevoren afzeggen via telefoon, WhatsApp of e-mail. Zeg je later af, dan wordt het lesgeld in rekening gebracht.
   - Alle zanglessen worden opgenomen. Je ontvangt na de les een CD of mp3-bestand met de opname.
+  label: Goed om te weten
 ---

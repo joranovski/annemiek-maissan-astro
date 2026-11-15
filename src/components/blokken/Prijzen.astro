@@ -3,15 +3,17 @@ import type { Blok } from "../../lib/content";
 
 interface Props {
   blok: Extract<Blok, { type: "prijzen" }>;
+  toon: "licht" | "donker";
 }
-const { blok } = Astro.props;
+const { blok, toon } = Astro.props;
 ---
 
-<section class="sectie prijzen" data-in-beeld>
+<section class:list={["sectie", "prijzen", `toon-${toon}`]} data-in-beeld id="tarieven">
   <div class="container">
     {
       (blok.kop || blok.subkop) && (
         <header class="sectie__kop">
+          {blok.label && <span class="label">{blok.label}</span>}
           {blok.kop && <h2>{blok.kop}</h2>}
           {blok.subkop && <p>{blok.subkop}</p>}
         </header>
@@ -40,15 +42,20 @@ const { blok } = Astro.props;
 
 <style>
   .prijzen .container {
-    max-width: 64rem;
+    max-inline-size: 64rem;
   }
   .prijzen__lijst {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
     gap: var(--r-6);
     margin: 0;
     padding: 0;
     list-style: none;
+    align-items: stretch;
+  }
+  @container sectie (width > 46rem) {
+    .prijzen__lijst {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
   .prijzen__kaart {
     position: relative;
@@ -58,28 +65,38 @@ const { blok } = Astro.props;
     border-radius: var(--hoek-lg);
     background: var(--kaart);
     color: var(--kaart-tekst);
-    box-shadow: var(--schaduw);
+    border: 1px solid hsl(186 30% 86%);
     text-align: center;
+    transition: translate 0.25s ease, box-shadow 0.25s ease;
   }
+  .prijzen__kaart:hover {
+    translate: 0 -4px;
+    box-shadow: var(--schaduw);
+  }
+  /* De populaire keuze in omgekeerde kleuren */
   .prijzen__kaart--populair {
-    box-shadow: 0 0 0 2px var(--petrol-700), var(--schaduw);
+    background: var(--petrol-800);
+    color: var(--wit);
+    border-color: var(--petrol-800);
+    --kaart-tekst-zacht: hsl(186 40% 90%);
   }
   .prijzen__kaart h3 {
-    color: var(--petrol-800);
-    margin-bottom: var(--r-1);
+    color: inherit;
+    margin-block-end: var(--r-1);
   }
   .prijzen__label {
     position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    inset-block-start: 0;
+    inset-inline-start: 50%;
+    translate: -50% -50%;
     padding: var(--r-1) var(--r-4);
     border-radius: var(--hoek-pil);
-    background: var(--petrol-700);
-    color: var(--wit);
-    font-size: 0.8125rem;
+    background: var(--wit);
+    color: var(--petrol-800);
+    border: 1px solid var(--petrol-800);
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
   .prijzen__omschrijving {
@@ -89,22 +106,26 @@ const { blok } = Astro.props;
   }
   .prijzen__prijs {
     margin: var(--r-6) 0 0;
-    padding-bottom: var(--r-6);
-    border-bottom: 1px solid var(--petrol-100);
+    padding-block-end: var(--r-6);
+    border-block-end: 1px solid color-mix(in oklab, currentColor 18%, transparent);
     font-family: var(--font-kop);
-    font-size: 2.75rem;
+    font-size: 3rem;
     line-height: 1;
-    color: var(--petrol-800);
     white-space: nowrap;
   }
   .prijzen__valuta {
-    font-size: 0.55em;
-    vertical-align: 0.6em;
-    margin-right: 0.1em;
+    font-size: 0.5em;
+    vertical-align: 0.75em;
+    margin-inline-end: 0.12em;
   }
   .prijzen__toelichting {
     margin: var(--r-4) 0 0;
     font-size: var(--tekst-sm);
     color: var(--kaart-tekst-zacht);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .prijzen__kaart:hover {
+      translate: none;
+    }
   }
 </style>

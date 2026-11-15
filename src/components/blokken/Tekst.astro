@@ -4,15 +4,18 @@ import { md, type Blok } from "../../lib/content";
 
 interface Props {
   blok: Extract<Blok, { type: "tekst" }>;
+  toon: "licht" | "donker";
 }
-const { blok } = Astro.props;
+const { blok, toon } = Astro.props;
 ---
 
-<section class:list={["sectie", "tekstblok", { "tekstblok--foto": blok.foto }]} data-in-beeld>
-  <div class:list={["container", { "container--smal": !blok.foto }, "tekstblok__raster"]}>
-    {blok.foto && <Foto src={blok.foto} alt={blok.fotoAlt ?? ""} widths={[480, 960]} sizes="(min-width: 48rem) 50vw, 100vw" class="tekstblok__foto" />}
-    <div class="tekstblok__paneel paneel">
+<section class:list={["sectie", "tekstblok", `toon-${toon}`, { "tekstblok--foto": blok.foto }]} data-in-beeld>
+  <div class="container tekstblok__raster">
+    <header class="tekstblok__kop">
+      {blok.label && <span class="label">{blok.label}</span>}
       {blok.kop && <h2>{blok.kop}</h2>}
+    </header>
+    <div class="tekstblok__tekst">
       {blok.tekst && <div class="tekst" set:html={md(blok.tekst)} />}
       {
         blok.knoppen.length > 0 && (
@@ -26,42 +29,72 @@ const { blok } = Astro.props;
         )
       }
     </div>
+    {
+      blok.foto && (
+        <Foto src={blok.foto} alt={blok.fotoAlt ?? ""} widths={[480, 960]} sizes="(min-width: 48rem) 40vw, 100vw" class="tekstblok__foto" />
+      )
+    }
   </div>
 </section>
 
 <style>
+  /* Kop links, tekst rechts op brede schermen: een rustige, redactionele opbouw */
   .tekstblok__raster {
     display: grid;
+    gap: var(--r-6) var(--r-16);
+    max-inline-size: 64rem;
+  }
+
+  @container sectie (width > 52rem) {
+    .tekstblok__raster {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      align-items: start;
+    }
+    .tekstblok__kop {
+      position: sticky;
+      inset-block-start: calc(var(--kop-hoogte) + var(--r-8));
+    }
+  }
+
+  .tekstblok__kop h2 {
+    font-size: var(--kop-lg);
+    margin: 0;
+  }
+
+  .tekstblok__tekst {
+    font-size: var(--tekst-lg);
+    line-height: 1.7;
+  }
+
+  .tekstblok__tekst :global(ul) {
+    list-style: none;
+    padding: 0;
+    columns: 2 14rem;
     gap: var(--r-8);
-    align-items: center;
   }
-  .tekstblok--foto .tekstblok__raster {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+
+  .tekstblok__tekst :global(li) {
+    break-inside: avoid;
+    padding-block: var(--r-2);
+    border-block-end: 1px solid var(--paneel-rand);
   }
-  .tekstblok__paneel {
-    padding: var(--r-8) var(--r-8) var(--r-8);
-  }
-  .tekstblok__paneel h2::after {
-    content: "";
-    display: block;
-    width: 3rem;
-    height: 1px;
-    margin-top: var(--r-4);
-    background: var(--lijn);
-  }
+
   .tekstblok :global(img.tekstblok__foto) {
+    grid-column: 1 / -1;
     border-radius: var(--hoek-lg);
     box-shadow: var(--schaduw);
   }
+
   .tekstblok__knoppen {
     display: flex;
     flex-wrap: wrap;
     gap: var(--r-3);
-    margin: var(--r-6) 0 0;
+    margin-block-start: var(--r-6);
   }
-  @media (max-width: 40rem) {
-    .tekstblok__paneel {
-      padding: var(--r-6);
+
+  @media (width < 40rem) {
+    .tekstblok__tekst {
+      font-size: var(--tekst-md);
     }
   }
 </style>
